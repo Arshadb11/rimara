@@ -1,0 +1,23 @@
+{
+  "name": "rimara-fragrance",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 8098",
+    "build": "next build",
+    "start": "next start -p 8098",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.25",
+    "motion": "^12.23.24",
+    "next": "^16.0.10",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "tailwindcss": "^4.1.18"
+  }
+}
