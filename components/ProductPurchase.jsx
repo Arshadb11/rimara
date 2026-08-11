@@ -39,7 +39,7 @@ export default function ProductPurchase({ product }) {
       </fieldset>
       <div className="product-actions">
         <button className="button-primary" type="button" onClick={addToBag} aria-live="polite">
-          {added ? `${product.name} ${size} added` : `Add ${size} · ${formatPrice(sizePrices[size])}`}
+          {added ? `${product.product_name} ${size} added` : `Add ${size} · ${formatPrice(sizePrices[size])}`}
         </button>
         <Link className="button-secondary" href="/shop/discovery-pack">Try in Discovery Pack</Link>
       </div>

@@ -4,7 +4,49 @@ import { homeProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import { HairlineDraw, LineReveal, Reveal, Stagger } from "@/components/Reveal";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const response = await fetch(
+    "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/allProducts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Origin": "http://localhost:3000",
+      },
+      body: JSON.stringify({
+        limit: "10",
+        page: "1",
+      }),
+      cache: "no-store",
+    }
+  );
+
+  const apiResponse = await response.json();
+
+  const productSettings = {
+    "quiet-blossom": {
+      color: "#d4a0a8",
+      ctx: "Explore Quiet Blossom",
+    },
+    "wild-air": {
+      color: "#8ab0c8",
+      ctx: "Explore Wild Air",
+    },
+    "last-light": {
+      color: "#e0a040",
+      ctx: "Explore Last Light",
+    },
+    "air-that-stays": {
+      color: "#b3a469",
+      ctx: "Explore Air That Stays",
+    },
+  };
+
+  const products = (apiResponse?.data || []).map((product) => ({
+    ...product,
+    ...(productSettings[product.product_name.toLowerCase().trim().replace(/\s+/g, '-')] || {}),
+  }));
+
   return (
     <main>
       <section className="hero">
@@ -32,7 +74,8 @@ export default function HomePage() {
         </div>
         <Stagger className="product-grid hairline-frame">
           <HairlineDraw />
-          {homeProducts.map((product) => <ProductCard key={product.id} product={product} />)}
+          {/* {homeProducts.map((product) => <ProductCard key={product.id} product={product} />)} */}
+          {products.map((product) => <ProductCard key={product.product_id} product={product} />)}
         </Stagger>
       </section>
 
