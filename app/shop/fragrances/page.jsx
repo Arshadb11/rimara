@@ -9,7 +9,54 @@ export const metadata = {
   description: "Choose the air you leave behind with Rimara fragrances."
 };
 
-export default function FragrancesPage() {
+export default async function FragrancesPage() {
+  const response = await fetch(
+    // "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/allProducts",
+    "http://localhost/rimara-admin/public/api/allProducts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Origin": "http://localhost:3000",
+      },
+      body: JSON.stringify({
+        limit: "5",
+        page: "1",
+      }),
+      cache: "no-store",
+    }
+  );
+
+  const apiResponse = await response.json();
+
+  const productSettings = {
+    "quiet-blossom": {
+      color: "#d4a0a8",
+      ctx: "Explore Quiet Blossom",
+    },
+    "wild-air": {
+      color: "#8ab0c8",
+      ctx: "Explore Wild Air",
+    },
+    "last-light": {
+      color: "#e0a040",
+      ctx: "Explore Last Light",
+    },
+    "air-that-stays": {
+      color: "#b3a469",
+      ctx: "Explore Air That Stays",
+    },
+    "discovery-pack": {
+      color: "#4a4a46",
+      ctx: "Discover the pack",
+    },
+  };
+
+  const products = (apiResponse?.data || []).map((product) => ({
+    ...product,
+    ...(productSettings[product.product_name.toLowerCase().trim().replace(/\s+/g, '-')] || {}),
+  }));
+  
   return (
     <main>
       <section className="catalog-hero">
@@ -18,7 +65,8 @@ export default function FragrancesPage() {
       </section>
       <Stagger className="catalog-grid hairline-frame">
         <HairlineDraw />
-        {[...products, discoveryPack].map((product) => <ProductCard key={product.id} product={product} />)}
+        {/* {[...products, discoveryPack].map((product) => <ProductCard key={product.id} product={product} />)} */}
+        {products.map((product) => <ProductCard key={product.product_id} product={product} />)}
       </Stagger>
       <section className="catalog-feature">
         <div><p className="eyebrow">Discovery Pack</p><h2><LineReveal>Start with all four. Let one stay.</LineReveal></h2></div>

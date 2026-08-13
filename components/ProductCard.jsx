@@ -44,15 +44,17 @@ export default function ProductCard({ product }) {
 
   return (
     <StaggerItem className="h-full">
-      <Link ref={ref} className="product-card catalog-card" href={`/shop/fragrances/${product.product_name.toLowerCase().trim().replace(/\s+/g, '-')}`} style={{ "--card-accent": product.color, "--card-hover-bg": product.color }}>
+      <Link ref={ref} className="product-card catalog-card" href={product.product_name.toLowerCase().trim().replace(/\s+/g, '-') == 'discovery-pack' ? '/shop/discovery-pack' : `/shop/fragrances/${product.product_name.toLowerCase().trim().replace(/\s+/g, '-')}`} style={{ "--card-accent": product.color, "--card-hover-bg": product.color }}>
         <motion.span
           className="product-card__media"
           initial={{ opacity: 0, scale: 1.03 }}
           animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.03 }}
           transition={{ duration: 1.1, ease }}
         >
-          <Image className="product-card__image product-card__image--base" src={`https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} fill sizes="(max-width: 768px) 100vw, 25vw" />
-          <Image className="product-card__image product-card__image--hover" src={`https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[1]}`} alt="" fill sizes="(max-width: 768px) 100vw, 25vw" />
+          {/* <Image className="product-card__image product-card__image--base" src={`https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} fill sizes="(max-width: 768px) 100vw, 25vw" /> */}
+          <Image className="product-card__image product-card__image--base" src={`http://localhost/rimara-admin/public/storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} fill sizes="(max-width: 768px) 100vw, 25vw" />
+          {/* <Image className="product-card__image product-card__image--hover" src={`https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[1]}`} alt="" fill sizes="(max-width: 768px) 100vw, 25vw" /> */}
+          <Image className="product-card__image product-card__image--hover" src={`http://localhost/rimara-admin/public/storage/${JSON.parse(product.images)[1]}`} alt="" fill sizes="(max-width: 768px) 100vw, 25vw" />
         </motion.span>
         <div className="product-card__body">
           <motion.span

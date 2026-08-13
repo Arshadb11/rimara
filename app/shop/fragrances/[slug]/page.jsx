@@ -11,9 +11,10 @@ import { LineReveal, Reveal, Stagger } from "@/components/Reveal";
 // }
 
 async function getProduct(slug) {
-  console.log('Slug =================================================================================',slug);
+  // console.log('Slug =================================================================================',slug);
   const response = await fetch(
-    "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/products",
+    // "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/products",
+    "http://localhost/rimara-admin/public/api/products",
     {
       method: "POST",
       headers: {
@@ -33,7 +34,7 @@ async function getProduct(slug) {
 
   const apiResponse = await response.json();
 
-  console.log('Response =================================================================================', apiResponse);
+  // console.log('Response =================================================================================', apiResponse);
 
   return apiResponse || null;
 }
@@ -128,9 +129,11 @@ export default async function ProductPage({ params }) {
     <main>
       <section className="product-detail">
         <div className="product-visual product-gallery">
-          <Image className="product-gallery__master" src={`https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} width={1086} height={1448} priority />
+          {/* <Image className="product-gallery__master" src={`https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} width={1086} height={1448} priority /> */}
+          <Image className="product-gallery__master" src={`http://localhost/rimara-admin/public/storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} width={1086} height={1448} priority />
           <div className="product-gallery__thumbs">
-            {JSON.parse(product.images).map((src, index) => <Image key={`${src}-${index}`} src={`https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${src}`} alt="" width={220} height={280} />)}
+            {/* {JSON.parse(product.images).map((src, index) => <Image key={`${src}-${index}`} src={`https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${src}`} alt="" width={220} height={280} />)} */}
+            {JSON.parse(product.images).map((src, index) => <Image key={`${src}-${index}`} src={`http://localhost/rimara-admin/public/storage/${src}`} alt="" width={220} height={280} />)}
           </div>
         </div>
         <Reveal className="product-buy">

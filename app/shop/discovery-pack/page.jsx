@@ -6,7 +6,50 @@ import { LineReveal, Reveal, Stagger } from "@/components/Reveal";
 
 export const metadata = { title: "Discovery Pack", description: "Try the full Rimara collection on skin." };
 
-export default function DiscoveryPackPage() {
+export default async function DiscoveryPackPage() {
+  const response = await fetch(
+    // "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/allProducts",
+    "http://localhost/rimara-admin/public/api/allProducts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Origin": "http://localhost:3000",
+      },
+      body: JSON.stringify({
+        limit: "4",
+        page: "1",
+      }),
+      cache: "no-store",
+    }
+  );
+
+  const apiResponse = await response.json();
+
+  const productSettings = {
+    "quiet-blossom": {
+      color: "#d4a0a8",
+      ctx: "Explore Quiet Blossom",
+    },
+    "wild-air": {
+      color: "#8ab0c8",
+      ctx: "Explore Wild Air",
+    },
+    "last-light": {
+      color: "#e0a040",
+      ctx: "Explore Last Light",
+    },
+    "air-that-stays": {
+      color: "#b3a469",
+      ctx: "Explore Air That Stays",
+    }
+  };
+
+  const products = (apiResponse?.data || []).map((product) => ({
+    ...product,
+    ...(productSettings[product.product_name.toLowerCase().trim().replace(/\s+/g, '-')] || {}),
+  }));
+
   return (
     <main>
       <section className="catalog-hero">
@@ -17,7 +60,7 @@ export default function DiscoveryPackPage() {
         <Image src={discoveryPack.image} alt={discoveryPack.alt} width={1086} height={1448} />
         <Reveal className="image-text__copy"><p className="eyebrow">{discoveryPack.mood}</p><h2><LineReveal>{discoveryPack.name}</LineReveal></h2><p className="body-copy">{discoveryPack.copy}</p><Link className="button-secondary" href="/contact">Enquire</Link></Reveal>
       </section>
-      <Stagger className="product-grid">{products.map((product) => <ProductCard key={product.id} product={product} />)}</Stagger>
+      <Stagger className="product-grid">{products.map((product) => <ProductCard key={product.product_id} product={product} />)}</Stagger>
     </main>
   );
 }
