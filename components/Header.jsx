@@ -37,7 +37,7 @@ export default function Header() {
         </ul>
         <div className="nav-right">
           <Link className="nav-action" href="/search" aria-label="Search"><Icon type="search" /></Link>
-          <Link className="nav-action" href="/contact" aria-label="Account"><Icon type="account" /></Link>
+          <Link className="nav-action" href="/login" aria-label="Account"><Icon type="account" /></Link>
           <Link className="nav-action cart-action" href="/cart" aria-label={`Cart with ${count} items`}><Icon type="cart" />{count > 0 ? <span className="cart-count">{count}</span> : null}</Link>
         </div>
       </nav>

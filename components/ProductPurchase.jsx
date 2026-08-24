@@ -16,23 +16,23 @@ export default function ProductPurchase({ product }) {
     const imageUrl = `https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[0]}`;
     addItem({
       // cart keys
-      id:    product.product_id,
-      name:  product.product_name,
+      id: product.product_id,
+      name: product.product_name,
       image: imageUrl,
       size,
       price: sizePrices[size],
       // full backend product fields for checkout payload
-      product_id:       product.product_id,
-      product_name:     product.product_name,
-      product_name_ar:  product.product_name_ar || null,
-      images:           product.images,
-      collection_name:  product.collection_name || null,
-      description:      product.description || "",
-      product_qty:      product.product_qty ?? 10,
+      product_id: product.product_id,
+      product_name: product.product_name,
+      product_name_ar: product.product_name_ar || null,
+      images: product.images,
+      collection_name: product.collection_name || null,
+      description: product.description || "",
+      product_qty: product.product_qty ?? 10,
       maximum_order_quantity: product.maximum_order_quantity ?? 0,
-      permalink:        product.permalink || { key: product.product_id },
-      sales:            product.sales ?? 0,
-      discount:         product.discount || null,
+      permalink: product.permalink || { key: product.product_id },
+      sales: product.sales ?? 0,
+      discount: product.discount || null,
     });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
@@ -43,16 +43,16 @@ export default function ProductPurchase({ product }) {
       <fieldset className="size-selector">
         <legend>Choose size</legend>
         <div className="size-selector__options">
-          {sizes.map((option) => (
-            <label key={option} className={size === option ? "is-selected" : ""}>
+          {product.variations.map((option) => (
+            <label key={option.name} className={size === option.name ? "is-selected" : ""}>
               <input
                 type="radio"
                 name={`fragrance-size-${product.product_id}`}
-                value={option}
-                checked={size === option}
-                onChange={() => { setSize(option); setAdded(false); }}
+                value={option.name}
+                checked={size === option.name}
+                onChange={() => { setSize(option.name); setAdded(false); }}
               />
-              <span>{option}</span>
+              <span>{option.name}</span>
             </label>
           ))}
         </div>

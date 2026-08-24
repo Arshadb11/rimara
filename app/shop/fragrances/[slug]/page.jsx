@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { products } from "@/lib/products";
 import ProductPurchase from "@/components/ProductPurchase";
 import ProductCard from "@/components/ProductCard";
+import ProductReviews from "@/components/ProductReviews";
 import { LineReveal, Reveal, Stagger } from "@/components/Reveal";
 
 // export function generateStaticParams() {
@@ -166,6 +167,7 @@ export default async function ProductPage({ params }) {
         <details><summary>Safety information</summary><p>FLAMMABLE. Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. For external use only. Avoid contact with eyes. Keep out of reach of children. Discontinue use if irritation occurs.</p></details>
         <details><summary>Product details and compliance</summary><p>{product.additional_details}</p></details>
       </section>
+      <ProductReviews product={product} />
       <section className="catalog-feature">
         <div><p className="eyebrow">Discovery Pack</p><h2><LineReveal>Start with all four. Let one stay.</LineReveal></h2></div>
         <Reveal><p>Fragrance should never be chosen in a hurry. It needs skin, time and air.</p><p>The Rimara Discovery Pack brings together four 10 ml fragrances: Air That Stays, Last Light, Wild Air and Quiet Blossom. Wear each one across a different hour, mood and day.</p><Link className="button-secondary" href="/shop/discovery-pack">Explore Discovery Pack</Link></Reveal>
