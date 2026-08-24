@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -1064,4 +1064,30 @@ h3 { font-size: clamp(27px, 2.7vw, 38px); line-height: 1.08; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   .hero-slide { animation: none !important; opacity: 1 !important; filter: none !important; transform: none !important; }
   .scroll-cue svg { animation: none !important; }
+}
+
+/* Payment method tiles — reuse size-selector tile styles via alias */
+.size-selector__label {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 92px;
+  min-height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--rimara-border);
+  font: 12px var(--font-label);
+  letter-spacing: .06em;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 180ms, background 180ms, color 180ms;
+}
+.size-selector__label:hover,
+.size-selector__label.is-selected {
+  border-color: var(--rimara-ink);
+  background: var(--rimara-ink);
+  color: var(--rimara-ivory);
+}
+.size-selector__label:has(input:focus-visible) {
+  outline: 2px solid var(--rimara-ink);
+  outline-offset: 3px;
 }

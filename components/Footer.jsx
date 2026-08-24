@@ -72,7 +72,7 @@ export default function Footer() {
         <p>Rimara is made to be experienced slowly. Try it on skin. Let it move with you. Let the air decide.</p>
         <p>Designed by COMDEZ UK</p>
       </motion.section>
-      <motion.div className="copyright" {...rise(0.82)}><span>© Rimara / Sillage. All rights reserved.</span><span>India / INR</span></motion.div>
+      <motion.div className="copyright" {...rise(0.82)}><span>© Rimara / Sillage. All rights reserved.</span><span>UAE / AED</span></motion.div>
     </footer>
   );
 }

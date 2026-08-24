@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -13,7 +13,27 @@ export default function ProductPurchase({ product }) {
   const { addItem } = useCart();
 
   function addToBag() {
-    addItem({ id: product.id, name: product.name, image: product.image, href: product.href, size, price: sizePrices[size] });
+    const imageUrl = `https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[0]}`;
+    addItem({
+      // cart keys
+      id:    product.product_id,
+      name:  product.product_name,
+      image: imageUrl,
+      size,
+      price: sizePrices[size],
+      // full backend product fields for checkout payload
+      product_id:       product.product_id,
+      product_name:     product.product_name,
+      product_name_ar:  product.product_name_ar || null,
+      images:           product.images,
+      collection_name:  product.collection_name || null,
+      description:      product.description || "",
+      product_qty:      product.product_qty ?? 10,
+      maximum_order_quantity: product.maximum_order_quantity ?? 0,
+      permalink:        product.permalink || { key: product.product_id },
+      sales:            product.sales ?? 0,
+      discount:         product.discount || null,
+    });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   }
@@ -27,7 +47,7 @@ export default function ProductPurchase({ product }) {
             <label key={option} className={size === option ? "is-selected" : ""}>
               <input
                 type="radio"
-                name="fragrance-size"
+                name={`fragrance-size-${product.product_id}`}
                 value={option}
                 checked={size === option}
                 onChange={() => { setSize(option); setAdded(false); }}

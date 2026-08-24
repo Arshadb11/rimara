@@ -14,7 +14,7 @@ export default function CartPage() {
       <div className="cart-layout">
         <section className="cart-items" aria-label="Shopping bag items">
           {items.map((item) => <article className="cart-item" key={`${item.id}-${item.size}`}>
-            <Link className="cart-item__image" href={item.href}><Image src={item.image} alt={item.name} width={180} height={225} /></Link>
+            <Link className="cart-item__image" href={item.name?.toLowerCase().trim().replace(/\s+/g, '-') === 'discovery-pack' ? '/shop/discovery-pack' : `/shop/fragrances/${item.name?.toLowerCase().trim().replace(/\s+/g, '-')}`}><Image src={item.image} alt={item.name} width={180} height={225} /></Link>
             <div className="cart-item__details"><p className="eyebrow">Eau de Parfum · {item.size}</p><h2>{item.name}</h2><p>{formatPrice(item.price)}</p>
               <div className="quantity-control" aria-label={`Quantity for ${item.name} ${item.size}`}>
                 <button type="button" onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)} aria-label="Decrease quantity">−</button>
