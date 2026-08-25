@@ -1,12 +1,43 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { useCatalog } from "@/components/CatalogContext";
 import { formatPrice } from "@/lib/commerce";
 
 const API_URL = "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/storeOrder";
+
+// ── Validation rules ──────────────────────────────────────────────────────────
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_RE = /^[+]?[\d\s\-().]{7,15}$/;
+
+function validate(fields) {
+  const errors = {};
+  if (!fields.firstName.trim())   errors.firstName  = "First name is required.";
+  if (!fields.lastName.trim())    errors.lastName   = "Last name is required.";
+  if (!fields.email.trim())       errors.email      = "Email address is required.";
+  else if (!EMAIL_RE.test(fields.email.trim())) errors.email = "Please enter a valid email address.";
+  if (!fields.phone.trim())       errors.phone      = "Phone number is required.";
+  else if (!PHONE_RE.test(fields.phone.trim())) errors.phone = "Please enter a valid phone number.";
+  if (!fields.address.trim())     errors.address    = "Street address is required.";
+  if (!fields.city.trim())        errors.city       = "City is required.";
+  if (!fields.postalCode.trim())  errors.postalCode = "Postal / PIN code is required.";
+  else if (fields.postalCode.trim().length < 3) errors.postalCode = "Please enter a valid postal code.";
+  if (!fields.state.trim())       errors.state      = "State / Emirate is required.";
+  return errors;
+}
+
+// ── Field wrapper with inline error message ───────────────────────────────────
+function Field({ label, error, children }) {
+  return (
+    <label>
+      {label}
+      {children}
+      {error && <span className="field-error" role="alert">{error}</span>}
+    </label>
+  );
+}
 
 // ── Discount helpers ──────────────────────────────────────────────────────────
 
@@ -221,29 +252,63 @@ export default function CheckoutPage() {
   const [orderRef,      setOrderRef]      = useState("");
   const [orderSnapshot, setOrderSnapshot] = useState(null);
   const [payMethod,     setPayMethod]     = useState("cod");
+  const [fieldErrors,   setFieldErrors]   = useState({});
+  const formRef = useRef(null);
 
   const codPrice    = payMethod === "cod" ? codFeeNum : 0;
   const codPriceVat = parseFloat(((codPrice / (1 + vatRate / 100)) * (vatRate / 100)).toFixed(2));
   const grandTotal  = parseFloat((finalPrice + codPrice).toFixed(2));
 
+  // Clear error for a field as the user types
+  const handleChange = useCallback((name) => {
+    setFieldErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
+  }, []);
+
   // ── Submit ────────────────────────────────────────────────────────────────
   async function submitOrder(event) {
     event.preventDefault();
     if (!items.length) return;
+
+    const fd = new FormData(event.currentTarget);
+    const fields = {
+      firstName:  String(fd.get("firstName")  ?? ""),
+      lastName:   String(fd.get("lastName")   ?? ""),
+      email:      String(fd.get("email")      ?? ""),
+      phone:      String(fd.get("phone")      ?? ""),
+      address:    String(fd.get("address")    ?? ""),
+      city:       String(fd.get("city")       ?? ""),
+      postalCode: String(fd.get("postalCode") ?? ""),
+      state:      String(fd.get("state")      ?? ""),
+    };
+
+    // Run client-side validation before touching the API
+    const errors = validate(fields);
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      const firstKey = Object.keys(errors)[0];
+      const el = formRef.current?.querySelector(`[name="${firstKey}"]`);
+      if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => el.focus(), 350); }
+      return;
+    }
+
     setState("loading");
     setApiError("");
 
-    const fd = new FormData(event.currentTarget);
     const address = {
-      first_name: fd.get("firstName"),
-      last_name:  fd.get("lastName"),
-      mobile:     fd.get("phone"),
-      email:      fd.get("email"),
+      first_name: fields.firstName,
+      last_name:  fields.lastName,
+      mobile:     fields.phone,
+      email:      fields.email,
       country:    "AE",
-      state:      fd.get("state"),
-      address:    fd.get("address"),
-      city:       fd.get("city"),
-      pincode:    fd.get("postalCode"),
+      state:      fields.state,
+      address:    fields.address,
+      city:       fields.city,
+      pincode:    fields.postalCode,
     };
 
     const payload = {
@@ -332,6 +397,8 @@ export default function CheckoutPage() {
   }
 
   const isLoading = state === "loading";
+  const fe = fieldErrors;
+  const inputCls = (name) => fe[name] ? "is-invalid" : "";
 
   // ── Checkout form ─────────────────────────────────────────────────────────
   return (
@@ -342,28 +409,52 @@ export default function CheckoutPage() {
       </header>
 
       <div className="checkout-layout">
-        <form className="checkout-form" onSubmit={submitOrder} noValidate>
+        <form className="checkout-form" onSubmit={submitOrder} noValidate ref={formRef}>
 
           {/* Contact */}
           <section>
             <h2>Contact</h2>
-            <label>Email<input required type="email" name="email" autoComplete="email" disabled={isLoading} /></label>
-            <label>Phone<input required type="tel"   name="phone" autoComplete="tel"   disabled={isLoading} /></label>
+            <Field label="Email" error={fe.email}>
+              <input type="email" name="email" autoComplete="email" disabled={isLoading}
+                className={inputCls("email")} onChange={() => handleChange("email")} aria-invalid={!!fe.email} />
+            </Field>
+            <Field label="Phone" error={fe.phone}>
+              <input type="tel" name="phone" autoComplete="tel" disabled={isLoading}
+                className={inputCls("phone")} onChange={() => handleChange("phone")} aria-invalid={!!fe.phone} />
+            </Field>
           </section>
 
           {/* Delivery address */}
           <section>
             <h2>Delivery address</h2>
             <div className="form-grid">
-              <label>First name<input required name="firstName" autoComplete="given-name"  disabled={isLoading} /></label>
-              <label>Last name <input required name="lastName"  autoComplete="family-name" disabled={isLoading} /></label>
+              <Field label="First name" error={fe.firstName}>
+                <input name="firstName" autoComplete="given-name" disabled={isLoading}
+                  className={inputCls("firstName")} onChange={() => handleChange("firstName")} aria-invalid={!!fe.firstName} />
+              </Field>
+              <Field label="Last name" error={fe.lastName}>
+                <input name="lastName" autoComplete="family-name" disabled={isLoading}
+                  className={inputCls("lastName")} onChange={() => handleChange("lastName")} aria-invalid={!!fe.lastName} />
+              </Field>
             </div>
-            <label>Address<input required name="address" autoComplete="street-address" disabled={isLoading} /></label>
+            <Field label="Address" error={fe.address}>
+              <input name="address" autoComplete="street-address" disabled={isLoading}
+                className={inputCls("address")} onChange={() => handleChange("address")} aria-invalid={!!fe.address} />
+            </Field>
             <div className="form-grid">
-              <label>City        <input required name="city"       autoComplete="address-level2" disabled={isLoading} /></label>
-              <label>Postal / PIN<input required name="postalCode" autoComplete="postal-code"    disabled={isLoading} /></label>
+              <Field label="City" error={fe.city}>
+                <input name="city" autoComplete="address-level2" disabled={isLoading}
+                  className={inputCls("city")} onChange={() => handleChange("city")} aria-invalid={!!fe.city} />
+              </Field>
+              <Field label="Postal / PIN" error={fe.postalCode}>
+                <input name="postalCode" autoComplete="postal-code" disabled={isLoading}
+                  className={inputCls("postalCode")} onChange={() => handleChange("postalCode")} aria-invalid={!!fe.postalCode} />
+              </Field>
             </div>
-            <label>State / Emirate<input required name="state" autoComplete="address-level1" disabled={isLoading} /></label>
+            <Field label="State / Emirate" error={fe.state}>
+              <input name="state" autoComplete="address-level1" disabled={isLoading}
+                className={inputCls("state")} onChange={() => handleChange("state")} aria-invalid={!!fe.state} />
+            </Field>
           </section>
 
           {/* Payment — reuses .size-selector tile pattern from globals.css */}

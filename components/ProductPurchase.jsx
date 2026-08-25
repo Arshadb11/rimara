@@ -1,14 +1,18 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
-import { formatPrice, sizePrices } from "@/lib/commerce";
-
-const sizes = ["10ML", "100ML"];
+import { formatPrice } from "@/lib/commerce";
 
 export default function ProductPurchase({ product }) {
-  const [size, setSize] = useState("100ML");
+  // Build price map dynamically from whatever variations the API returns
+  const priceMap = Object.fromEntries(
+    (product.variations || []).map((v) => [v.name, parseFloat(v.price)])
+  );
+
+  // Default to first variation (not a hardcoded size)
+  const [size, setSize] = useState(() => product.variations?.[0]?.name ?? "");
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
 
@@ -20,7 +24,7 @@ export default function ProductPurchase({ product }) {
       name: product.product_name,
       image: imageUrl,
       size,
-      price: sizePrices[size],
+      price: priceMap[size] ?? 0,
       // full backend product fields for checkout payload
       product_id: product.product_id,
       product_name: product.product_name,
@@ -59,7 +63,7 @@ export default function ProductPurchase({ product }) {
       </fieldset>
       <div className="product-actions">
         <button className="button-primary" type="button" onClick={addToBag} aria-live="polite">
-          {added ? `${product.product_name} ${size} added` : `Add ${size} · ${formatPrice(sizePrices[size])}`}
+          {added ? `${product.product_name} ${size} added` : `Add ${size} · ${formatPrice(priceMap[size] ?? 0)}`}
         </button>
         <Link className="button-secondary" href="/shop/discovery-pack">Try in Discovery Pack</Link>
       </div>
