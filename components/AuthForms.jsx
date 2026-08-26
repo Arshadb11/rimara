@@ -66,7 +66,7 @@ export function LoginForm() {
     setGlobalMessage("");
 
     try {
-      const response = await fetch("https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/signin", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -224,7 +224,7 @@ export function RegisterForm() {
     setGlobalMessage("");
 
     try {
-      const response = await fetch("https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/signup", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -382,7 +382,7 @@ export function ForgotPasswordForm() {
     setGlobalMessage("");
 
     try {
-      const response = await fetch("https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/forgotPassword", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/forgotPassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

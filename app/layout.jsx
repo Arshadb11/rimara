@@ -27,7 +27,7 @@ async function fetchCatalogData() {
 
   try {
     const res = await fetch(
-      "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/productCategoriesTemp",
+      `${process.env.NEXT_PUBLIC_API_URL}api/productCategoriesTemp`,
       {
         method:  "POST",
         headers: { "Content-Type": "application/json" },

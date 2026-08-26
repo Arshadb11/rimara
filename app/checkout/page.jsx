@@ -6,7 +6,7 @@ import { useCart } from "@/components/CartProvider";
 import { useCatalog } from "@/components/CatalogContext";
 import { formatPrice } from "@/lib/commerce";
 
-const API_URL = "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/storeOrder";
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}api/storeOrder`;
 
 // ── Validation rules ──────────────────────────────────────────────────────────
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

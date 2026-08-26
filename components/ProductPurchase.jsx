@@ -17,7 +17,7 @@ export default function ProductPurchase({ product }) {
   const { addItem } = useCart();
 
   function addToBag() {
-    const imageUrl = `https://phpstack-1448119-6605392.cloudwaysapps.com/public/storage/${JSON.parse(product.images)[0]}`;
+    const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(product.images)[0]}`;
     addItem({
       // cart keys
       id: product.product_id,

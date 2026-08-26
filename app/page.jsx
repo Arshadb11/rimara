@@ -6,7 +6,7 @@ import { HairlineDraw, LineReveal, Reveal, Stagger } from "@/components/Reveal";
 
 export default async function HomePage() {
   const response = await fetch(
-    "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/allProducts",
+    `${process.env.NEXT_PUBLIC_API_URL}api/allProducts`,
     // "http://localhost/rimara-admin/public/api/allProducts",
     {
       method: "POST",
