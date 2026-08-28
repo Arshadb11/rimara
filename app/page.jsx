@@ -43,7 +43,7 @@ export default async function HomePage() {
     },
   };
 
-  const products = (apiResponse?.data || []).map((product) => ({
+  const products = (apiResponse?.products?.data || []).map((product) => ({
     ...product,
     ...(productSettings[product.product_name.toLowerCase().trim().replace(/\s+/g, '-')] || {}),
   }));
@@ -52,14 +52,14 @@ export default async function HomePage() {
     <main>
       <section className="hero">
         <div className="hero-media">
-          {["banner-1.png", "banner-2.png", "banner-3.png"].map((name, index) => (
-            <Image key={name} className="hero-slide" src={`/assets/images/homepage/${name}`} alt="" fill priority={index === 0} sizes="100vw" />
+          {(apiResponse?.home_sliders || []).map((slider, index) => (
+            <Image key={slider.image} className="hero-slide" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${slider.image}`} alt="" fill priority={index === 0} sizes="100vw" />
           ))}
         </div>
         <div className="hero-copy">
-          <Reveal delay={0}><p className="eyebrow">Hero</p></Reveal>
-          <h1><LineReveal delay={0.12}>Own the Air</LineReveal></h1>
-          <Reveal delay={0.32}><p className="body-copy">Inspired by the spirit of the desert, Rimara is a collection of fine fragrances crafted for those who choose presence over attention.</p></Reveal>
+          <Reveal delay={0}><p className="eyebrow">{ apiResponse?.home_sliders?.[0]?.season }</p></Reveal>
+          <h1><LineReveal delay={0.12}>{ apiResponse?.home_sliders?.[0]?.title }</LineReveal></h1>
+          <Reveal delay={0.32}><p className="body-copy">{ apiResponse?.home_sliders?.[0]?.sub_title }</p></Reveal>
           <Reveal delay={0.46}><Link className="text-link" href="/shop/fragrances">View fragrances</Link></Reveal>
         </div>
         <a className="scroll-cue" href="#collection" aria-label="Scroll to collection">

@@ -154,7 +154,7 @@ export function LoginForm() {
         <Link href="/forgot-password">Forgot password?</Link>
         <Link href="/register">Create account</Link>
       </div>
-      <Link className="auth-demo-link" href="/account">View demo dashboard</Link>
+      {/* <Link className="auth-demo-link" href="/account">View demo dashboard</Link> */}
     </form>
   );
 }

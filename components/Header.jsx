@@ -21,12 +21,12 @@ function Icon({ type }) {
   return <svg viewBox="0 0 24 24"><path d="M6 8h12l-1 13H7L6 8Z" /><path d="M9 8a3 3 0 0 1 6 0" /></svg>;
 }
 
-export default function Header() {
+export default function Header({ topHeader }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { count } = useCart();
   return (
     <header className="site-header">
-      <div className="announcement">Rimara Fine Fragrance - Own the Air</div>
+      <div className="announcement">{ topHeader ? topHeader[0].title : 'Rimara Fine Fragrance - Own the Air' }</div>
       <nav className="nav-shell" aria-label="Primary navigation">
         <button className="mobile-menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? "Close" : "Menu"}</button>
         <Link className="brand-logo" href="/" aria-label="Rimara home">

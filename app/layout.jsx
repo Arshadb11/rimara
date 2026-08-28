@@ -61,6 +61,10 @@ async function fetchCatalogData() {
 
       // Currency
       currency: json?.currency ?? "AED",
+
+      top_header: Array.isArray(json?.top_header)
+        ? json.top_header
+        : [],
     };
   } catch (err) {
     console.error("[CatalogContext] fetch failed:", err.message);
@@ -70,7 +74,7 @@ async function fetchCatalogData() {
 
 // ── Root layout ──────────────────────────────────────────────────────────────
 export default async function RootLayout({ children }) {
-  const { categories, shippingCharges, vatRate, currency } = await fetchCatalogData();
+  const { categories, shippingCharges, vatRate, currency, top_header } = await fetchCatalogData();
 
   return (
     <html lang="en">
@@ -83,7 +87,7 @@ export default async function RootLayout({ children }) {
         >
           <CartProvider>
             <MotionProvider>
-              <Header />
+              <Header topHeader={top_header}/>
               {children}
               <Footer />
             </MotionProvider>
