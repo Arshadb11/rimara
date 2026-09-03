@@ -29,137 +29,123 @@ const noteGroups = [
 
 /* ── Scoring engine ──────────────────────────────────────────────────────── */
 /**
- * Real API fields per product:
- *   product_name       e.g. "Air That Stays"
- *   occasion           e.g. "Deep desert night · 02:00"
- *   item_classification e.g. "Oud · Hero Fragrance · Men's"
- *   description        long prose paragraph(s) with HTML tags
+ * Scores a product against the user's selections.
+ * Design principles:
+ *  1. Hour must be an EXACT phrase match — no loose fallbacks that hit every product.
+ *  2. Notes use PRODUCT-SPECIFIC keywords, not generic adjectives.
+ *  3. Minimum threshold of 8 is required to appear — loose one-word hits are not enough.
+ *  4. Results are capped at 3 — this is a recommendation, not a catalogue.
  *
- * We search all four fields as a single lowercase string and award points
- * when the user's selection keyword appears in that text.
+ * Known products and their distinguishing text in the real API:
+ *  Air That Stays  — occasion: "deep desert night · 02:00" | classification: "Oud"
+ *  Last Light      — occasion: "golden hour"               | classification: "Amber · Moss"
+ *  Wild Air        — occasion: "midday heat"               | classification: "Fougere · Woody"
+ *  Quiet Blossom   — occasion: "before dawn"               | classification: "Lily · Women's"
  */
 function scoreProduct(product, form) {
   let score = 0;
 
-  // Build a single searchable string from real API fields only
-  const text = [
-    product.product_name   || "",
-    product.occasion       || "",
-    product.item_classification || "",
-    // Strip HTML tags from description so we search clean prose
-    (product.description   || "").replace(/<[^>]+>/g, " "),
-    product.collection_name|| "",
-  ]
-    .join(" ")
-    .toLowerCase();
+  // Separate search targets for precision
+  const occasion   = (product.occasion || "").toLowerCase();
+  const classify   = (product.item_classification || "").toLowerCase();
+  const prose      = (product.description || "").replace(/<[^>]+>/g, " ").toLowerCase();
+  const all        = `${occasion} ${classify} ${prose}`;
 
-  // ── 01 / Hour (matches occasion field, which contains time & place) ─────
-  // occasion examples:
-  //   "Before dawn · found by scent, not sight · 04:30"
-  //   "Midday heat · open ground · moving · 13:00"
-  //   "Golden hour · final breath · 18:42"
-  //   "Deep desert night · 02:00"
-  const hourMap = {
-    "before dawn":      ["before dawn", "04:", "dawn"],
-    "midday heat":      ["midday", "mid day", "13:", "heat", "open ground"],
-    "golden hour":      ["golden hour", "golden", "18:"],
-    "deep desert night":["deep desert", "desert night", "02:", "deep desert night"],
+  // ── Hour — EXACT phrase in the occasion field only ──────────────────────
+  // Every product has a unique occasion. Only award points when it's a clear match.
+  // No vague fallback keywords — that's what was causing everything to match.
+  const hourPhrases = {
+    "before dawn":       ["before dawn", "04:"],
+    "midday heat":       ["midday heat", "midday", "13:"],
+    "golden hour":       ["golden hour", "18:"],
+    "deep desert night": ["deep desert night", "desert night", "02:"],
   };
   const hourKey = (form.hour || "").toLowerCase();
-  if (hourKey && hourMap[hourKey]) {
-    // Exact phrase match first (worth more), then keyword match
-    if (text.includes(hourKey)) {
-      score += 5;
-    } else if (hourMap[hourKey].some((kw) => text.includes(kw))) {
-      score += 3;
+  if (hourKey && hourPhrases[hourKey]) {
+    if (hourPhrases[hourKey].some((ph) => occasion.includes(ph))) {
+      score += 8; // Strong signal — occasion is a near-unique identifier
     }
+    // No else: a mismatched hour earns 0 pts (acts as a soft disqualifier)
   }
 
-  // ── 02 / Feeling (matches description prose) ─────────────────────────────
-  // Each feeling maps to adjectives/moods that appear in the description copy
+  // ── Feeling — prose adjectives that are SPECIFIC to each product ─────────
+  // Avoid generic words ("soft", "deep", "open") that appear in every product.
   const feelingMap = {
-    quiet:   ["quiet", "soft", "close", "gentle", "intimate", "still", "dawn"],
-    wild:    ["wild", "open", "movement", "fresh", "alive", "energy", "moving"],
-    warm:    ["warm", "golden", "amber", "warmth", "glow", "heat"],
-    lasting: ["lasting", "stays", "memorable", "unforgettable", "linger", "deep", "trail"],
+    quiet:   ["quiet", "intimate", "before it is explained", "gentle"],         // Quiet Blossom
+    wild:    ["wild", "movement", "alive", "forward motion", "energy"],          // Wild Air
+    warm:    ["golden", "warmth", "low sun", "glow", "amber warmth"],            // Last Light
+    lasting: ["stays after", "difficult to forget", "stays quietly", "oud", "trail that stays"], // Air That Stays
   };
   const feelingKey = (form.feeling || "").toLowerCase();
   if (feelingKey && feelingMap[feelingKey]) {
-    const hits = feelingMap[feelingKey].filter((kw) => text.includes(kw)).length;
-    score += Math.min(hits, 3) * 2; // up to +6
+    const hits = feelingMap[feelingKey].filter((kw) => all.includes(kw)).length;
+    score += hits * 3; // up to several points but requires real keyword hits
   }
 
-  // ── 02 / Presence (trail style — also description prose) ─────────────────
+  // ── Presence — trail character ────────────────────────────────────────────
   const presenceMap = {
-    "soft and close":     ["soft", "close", "musky", "intimate", "skin", "near"],
-    "clean and moving":   ["clean", "fresh", "moving", "open", "fougere", "movement"],
-    "warm and intimate":  ["warm", "intimate", "amber", "vanilla", "skin", "warmth"],
-    "deep and memorable": ["deep", "memorable", "oud", "lasting", "stays", "trail"],
+    "soft and close":     ["close to skin", "stays near", "musky", "musk", "intimate"],
+    "clean and moving":   ["clean", "fougere", "fougère", "movement", "forward motion"],
+    "warm and intimate":  ["warm", "intimate", "amber", "vanilla"],
+    "deep and memorable": ["stays after you leave", "memorable", "oud", "lasting trail"],
   };
   const presenceKey = (form.presence || "").toLowerCase();
   if (presenceKey && presenceMap[presenceKey]) {
-    const hits = presenceMap[presenceKey].filter((kw) => text.includes(kw)).length;
-    score += Math.min(hits, 3) * 2; // up to +6
+    const hits = presenceMap[presenceKey].filter((kw) => all.includes(kw)).length;
+    score += hits * 3;
   }
 
-  // ── 02 / Notes — matched against item_classification + description ────────
-  // item_classification examples:
-  //   "Oud · Hero Fragrance · Men's"
-  //   "Amber · Moss · Men's"
-  //   "Fougère · Woody · Men's"
-  //   "Lily · Women's"
-  //
-  // Top note form options → keywords likely found in classification/description
+  // ── Top note — product-specific keywords ─────────────────────────────────
+  // Only award points when the keyword is genuinely distinctive for that product
   const topNoteMap = {
-    "bergamot":    ["bergamot", "citrus", "fresh"],
-    "pink pepper": ["pink pepper", "pepper", "spice"],
-    "green leaves":["green", "leaf", "leafy"],
-    "fresh air":   ["fresh", "open", "clean"],
-    "soft citrus": ["citrus", "lemon", "lime", "soft citrus"],
+    "bergamot":    ["bergamot"],               // Wild Air only
+    "pink pepper": ["pepper", "pink pepper"],
+    "green leaves": ["green", "leaves"],
+    "fresh air":   ["fresh air", "open air"],
+    "soft citrus": ["citrus", "lemon"],
   };
   const topKey = (form["top-note"] || "").toLowerCase();
   if (topKey && topNoteMap[topKey]) {
-    if (topNoteMap[topKey].some((kw) => text.includes(kw))) score += 4;
+    if (topNoteMap[topKey].some((kw) => all.includes(kw))) score += 5;
   }
 
-  // Middle note options → heart of the fragrance
+  // ── Middle note — heart of the fragrance ─────────────────────────────────
   const midNoteMap = {
-    "lily":      ["lily", "floral", "white floral", "bloom", "blossom"],
-    "amber":     ["amber", "golden", "resinous", "luminous"],
-    "moss":      ["moss", "oakmoss", "earthy", "mossy"],
-    "fougere":   ["fougere", "fougère", "woody", "aromatic", "lavender"],
-    "dry woods": ["wood", "woody", "cedar", "cedarwood", "dry"],
+    "lily":      ["lily", "white floral"],      // Quiet Blossom only
+    "amber":     ["amber", "oakmoss"],          // Last Light
+    "moss":      ["moss", "oakmoss"],            // Last Light only
+    "fougere":   ["fougere", "fougère", "lavender"], // Wild Air only
+    "dry woods": ["cedarwood", "cedar", "woody"],    // Wild Air
   };
   const midKey = (form["middle-note"] || "").toLowerCase();
   if (midKey && midNoteMap[midKey]) {
-    if (midNoteMap[midKey].some((kw) => text.includes(kw))) score += 4;
+    if (midNoteMap[midKey].some((kw) => all.includes(kw))) score += 5;
   }
 
-  // Low/base note options → the lasting trail
+  // ── Low / base note ───────────────────────────────────────────────────────
   const baseNoteMap = {
-    "oud":          ["oud", "hero"],
-    "patchouli":    ["patchouli", "earthy", "textured"],
-    "ambered woods":["amber", "ambered", "warm", "resin"],
-    "musk":         ["musk", "musky", "intimate", "skin"],
-    "warm resin":   ["resin", "warm", "vanilla", "balsam"],
+    "oud":           ["oud"],                   // Air That Stays only
+    "patchouli":     ["patchouli"],             // Air That Stays only
+    "ambered woods": ["ambered woods", "dusk woods", "amber"],  // Last Light
+    "musk":          ["musk"],                  // Quiet Blossom only
+    "warm resin":    ["warm resin", "resin", "vanilla"],
   };
   const baseKey = (form["low-note"] || "").toLowerCase();
   if (baseKey && baseNoteMap[baseKey]) {
-    if (baseNoteMap[baseKey].some((kw) => text.includes(kw))) score += 4;
+    if (baseNoteMap[baseKey].some((kw) => all.includes(kw))) score += 5;
   }
 
-  // ── 03 / Texture (broad fragrance family) ────────────────────────────────
-  // Maps to real words in item_classification / description
+  // ── Texture — fragrance family ────────────────────────────────────────────
   const textureMap = {
-    clean:   ["clean", "fresh", "fougere", "fougère", "citrus", "bergamot"],
-    floral:  ["floral", "lily", "bloom", "blossom", "white floral"],
-    woody:   ["woody", "wood", "cedar", "fougere", "dry"],
-    ambered: ["amber", "oud", "resin", "warm", "vanilla", "patchouli"],
+    clean:   ["fougere", "fougère", "bergamot", "clean"],  // Wild Air
+    floral:  ["lily", "white floral", "blossom"],           // Quiet Blossom
+    woody:   ["fougere", "fougère", "cedarwood", "woody"],  // Wild Air
+    ambered: ["amber", "oud", "patchouli", "vanilla"],      // Air That Stays / Last Light
   };
   const textureKey = (form.texture || "").toLowerCase();
   if (textureKey && textureMap[textureKey]) {
-    const hits = textureMap[textureKey].filter((kw) => text.includes(kw)).length;
-    score += Math.min(hits, 2) * 3; // up to +6
+    const hits = textureMap[textureKey].filter((kw) => all.includes(kw)).length;
+    score += hits * 3;
   }
 
   return score;
@@ -347,8 +333,9 @@ export default function DiagnosticForm() {
 
       const scored = raw
         .map((p) => ({ ...enrichProduct(p), _score: scoreProduct(p, form) }))
-        .filter((p) => p._score > 0)
-        .sort((a, b) => b._score - a._score);
+        .filter((p) => p._score >= 8)      // must meaningfully match — not just a stray word
+        .sort((a, b) => b._score - a._score)
+        .slice(0, 3);                       // diagnostic shows at most 3 recommendations
 
       setResults(scored);
     } catch (err) {
