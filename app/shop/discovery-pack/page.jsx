@@ -45,7 +45,7 @@ export default async function DiscoveryPackPage() {
     }
   };
 
-  const products = (apiResponse?.data || []).map((product) => ({
+  const products = (apiResponse?.products?.data || []).map((product) => ({
     ...product,
     ...(productSettings[product.product_name.toLowerCase().trim().replace(/\s+/g, '-')] || {}),
   }));

@@ -52,10 +52,12 @@ export default async function FragrancesPage() {
     },
   };
 
-  const products = (apiResponse?.data || []).map((product) => ({
+  const products = (apiResponse?.products?.data || []).map((product) => ({
     ...product,
     ...(productSettings[product.product_name.toLowerCase().trim().replace(/\s+/g, '-')] || {}),
   }));
+
+  // console.log('=============================================================',products);
   
   return (
     <main>
