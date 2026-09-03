@@ -279,6 +279,18 @@ function NoResults({ onReset }) {
   );
 }
 
+/* ── Field labels (for validation messages) ─────────────────────────────── */
+const FIELD_LABELS = {
+  hour:          "Hour",
+  feeling:       "Feeling",
+  presence:      "Presence",
+  "top-note":    "Top note",
+  "middle-note": "Middle note",
+  "low-note":    "Low note",
+  for:           "For",
+  texture:       "Texture",
+};
+
 /* ── Main export ─────────────────────────────────────────────────────────── */
 export default function DiagnosticForm() {
   const [form, setForm] = useState({
@@ -294,7 +306,12 @@ export default function DiagnosticForm() {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
   const resultsRef = useRef(null);
+
+  // Which fields are still empty?
+  const emptyFields = Object.keys(form).filter((k) => !form[k]);
+  const allFilled = emptyFields.length === 0;
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -302,6 +319,8 @@ export default function DiagnosticForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setSubmitted(true);
+    if (!allFilled) return; // block submission — show validation message
     setLoading(true);
     setError(null);
     setResults(null);
@@ -355,6 +374,7 @@ export default function DiagnosticForm() {
     });
     setResults(null);
     setError(null);
+    setSubmitted(false);
   }
 
   const hasResults = results !== null;
@@ -379,7 +399,8 @@ export default function DiagnosticForm() {
             <p className="eyebrow">01 / Mood</p>
             <label>
               <span>Hour</span>
-              <select name="hour" value={form.hour} onChange={handleChange}>
+              <select name="hour" value={form.hour} onChange={handleChange} required
+                className={submitted && !form.hour ? "select--error" : ""}>
                 <option value="" disabled>Select an hour</option>
                 <option>Before dawn</option>
                 <option>Midday heat</option>
@@ -389,7 +410,8 @@ export default function DiagnosticForm() {
             </label>
             <label>
               <span>Feeling</span>
-              <select name="feeling" value={form.feeling} onChange={handleChange}>
+              <select name="feeling" value={form.feeling} onChange={handleChange} required
+                className={submitted && !form.feeling ? "select--error" : ""}>
                 <option value="" disabled>Select a feeling</option>
                 <option>Quiet</option>
                 <option>Wild</option>
@@ -399,7 +421,8 @@ export default function DiagnosticForm() {
             </label>
             <label>
               <span>Presence</span>
-              <select name="presence" value={form.presence} onChange={handleChange}>
+              <select name="presence" value={form.presence} onChange={handleChange} required
+                className={submitted && !form.presence ? "select--error" : ""}>
                 <option value="" disabled>Select presence</option>
                 <option>Soft and close</option>
                 <option>Clean and moving</option>
@@ -419,6 +442,8 @@ export default function DiagnosticForm() {
                   name={group.id}
                   value={form[group.id]}
                   onChange={handleChange}
+                  required
+                  className={submitted && !form[group.id] ? "select--error" : ""}
                 >
                   <option value="" disabled>
                     Choose {group.label.toLowerCase()}
@@ -437,7 +462,8 @@ export default function DiagnosticForm() {
             <p className="eyebrow">03 / Wear</p>
             <label>
               <span>For</span>
-              <select name="for" value={form.for} onChange={handleChange}>
+              <select name="for" value={form.for} onChange={handleChange} required
+                className={submitted && !form.for ? "select--error" : ""}>
                 <option value="" disabled>Select wearer</option>
                 <option>Self</option>
                 <option>Gift</option>
@@ -446,7 +472,8 @@ export default function DiagnosticForm() {
             </label>
             <label>
               <span>Texture</span>
-              <select name="texture" value={form.texture} onChange={handleChange}>
+              <select name="texture" value={form.texture} onChange={handleChange} required
+                className={submitted && !form.texture ? "select--error" : ""}>
                 <option value="" disabled>Select texture</option>
                 <option>Clean</option>
                 <option>Floral</option>
@@ -455,6 +482,12 @@ export default function DiagnosticForm() {
               </select>
             </label>
             <div className="diagnostic-actions">
+              {submitted && !allFilled && (
+                <p className="diagnostic-validation-msg" role="alert">
+                  Please complete:{" "}
+                  {emptyFields.map((k) => FIELD_LABELS[k]).join(", ")}
+                </p>
+              )}
               <button type="submit" disabled={loading} id="find-fragrance-btn">
                 {loading ? "Finding your air\u2026" : "Find your fragrance"}
               </button>

@@ -782,6 +782,24 @@ h3 {
   outline-offset: 3px;
 }
 
+.diagnostic-form select.select--error {
+  border-color: var(--rimara-copper);
+  outline: 1px solid var(--rimara-copper);
+}
+
+.diagnostic-validation-msg {
+  margin: 0;
+  padding: 10px 14px;
+  border-left: 2px solid var(--rimara-copper);
+  background: rgba(181, 106, 42, 0.1);
+  color: var(--rimara-copper);
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
 .diagnostic-form select option {
   background: var(--rimara-ivory);
   color: var(--rimara-ink);
