@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect  } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { useCatalog } from "@/components/CatalogContext";
@@ -67,7 +67,7 @@ function discountLabel(discount) {
 function buildProducts(items) {
   return items.map((item) => ({
     price:                  effectivePrice(item.price, item.discount).toFixed(2),
-    product_id:             item.id,
+    product_id:             item.product_id,
     product_name:           item.name,
     product_name_ar:        null,
     image:                  item.image  || null,
@@ -223,6 +223,47 @@ function OrderConfirmed({ snapshot }) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CheckoutPage() {
+  const [formValues, setFormValues] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    state: "",
+  });
+
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem("rimaraUser");
+
+      if (!storedUser) return;
+
+      const user = JSON.parse(storedUser);
+
+      // console.log("Loaded user from localStorage:=================================", user);
+
+      const nameParts = (user.name || "").trim().split(/\s+/);
+
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+
+      setFormValues({
+        firstName,
+        lastName,
+        email: user.email || "",
+        phone: user.mobile || "",
+        address: user.address?.address || user.address || "",
+        city: user.address?.city || "",
+        postalCode: user.address?.zip_code || "",
+        state: user.address?.state || "",
+      });
+    } catch (error) {
+      console.error("Unable to load user from localStorage:", error);
+    }
+  }, []);
+
   const { items, subtotal, clearCart, ready } = useCart();
 
   // ── Shipping + VAT config from API ────────────────────────────────────────
@@ -268,6 +309,15 @@ export default function CheckoutPage() {
       return next;
     });
   }, []);
+
+  const handleFieldChange = useCallback((name, value) => {
+  setFormValues((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+
+  handleChange(name);
+}, [handleChange]);
 
   // ── Submit ────────────────────────────────────────────────────────────────
   async function submitOrder(event) {
@@ -415,12 +465,12 @@ export default function CheckoutPage() {
           <section>
             <h2>Contact</h2>
             <Field label="Email" error={fe.email}>
-              <input type="email" name="email" autoComplete="email" disabled={isLoading}
-                className={inputCls("email")} onChange={() => handleChange("email")} aria-invalid={!!fe.email} />
+              <input type="email" name="email" autoComplete="email" disabled={isLoading} value={formValues.email}
+                className={inputCls("email")} onChange={(e) => handleFieldChange("email", e.target.value)} aria-invalid={!!fe.email} />
             </Field>
             <Field label="Phone" error={fe.phone}>
-              <input type="tel" name="phone" autoComplete="tel" disabled={isLoading}
-                className={inputCls("phone")} onChange={() => handleChange("phone")} aria-invalid={!!fe.phone} />
+              <input type="tel" name="phone" autoComplete="tel" disabled={isLoading} value={formValues.phone} inputMode="numeric" maxLength={10}
+                className={inputCls("phone")} onChange={(e) => { const value = e.target.value.replace(/\D/g, "").slice(0, 10); handleFieldChange("phone", value);}} aria-invalid={!!fe.phone} />
             </Field>
           </section>
 
@@ -429,31 +479,31 @@ export default function CheckoutPage() {
             <h2>Delivery address</h2>
             <div className="form-grid">
               <Field label="First name" error={fe.firstName}>
-                <input name="firstName" autoComplete="given-name" disabled={isLoading}
-                  className={inputCls("firstName")} onChange={() => handleChange("firstName")} aria-invalid={!!fe.firstName} />
+                <input name="firstName" autoComplete="given-name" disabled={isLoading} value={formValues.firstName}
+                  className={inputCls("firstName")} onChange={(e) => handleFieldChange("firstName", e.target.value)} aria-invalid={!!fe.firstName} />
               </Field>
               <Field label="Last name" error={fe.lastName}>
-                <input name="lastName" autoComplete="family-name" disabled={isLoading}
-                  className={inputCls("lastName")} onChange={() => handleChange("lastName")} aria-invalid={!!fe.lastName} />
+                <input name="lastName" autoComplete="family-name" disabled={isLoading} value={formValues.lastName}
+                  className={inputCls("lastName")} onChange={(e) => handleFieldChange("lastName", e.target.value)} aria-invalid={!!fe.lastName} />
               </Field>
             </div>
             <Field label="Address" error={fe.address}>
-              <input name="address" autoComplete="street-address" disabled={isLoading}
-                className={inputCls("address")} onChange={() => handleChange("address")} aria-invalid={!!fe.address} />
+              <input name="address" autoComplete="street-address" disabled={isLoading} value={formValues.address}
+                className={inputCls("address")} onChange={(e) => handleFieldChange("address", e.target.value)} aria-invalid={!!fe.address} />
             </Field>
             <div className="form-grid">
               <Field label="City" error={fe.city}>
-                <input name="city" autoComplete="address-level2" disabled={isLoading}
-                  className={inputCls("city")} onChange={() => handleChange("city")} aria-invalid={!!fe.city} />
+                <input name="city" autoComplete="address-level2" disabled={isLoading} value={formValues.city}
+                  className={inputCls("city")} onChange={(e) => handleFieldChange("city", e.target.value)} aria-invalid={!!fe.city} />
               </Field>
               <Field label="Postal / PIN" error={fe.postalCode}>
-                <input name="postalCode" autoComplete="postal-code" disabled={isLoading}
-                  className={inputCls("postalCode")} onChange={() => handleChange("postalCode")} aria-invalid={!!fe.postalCode} />
+                <input name="postalCode" autoComplete="postal-code" disabled={isLoading} value={formValues.postalCode}
+                  className={inputCls("postalCode")} onChange={(e) => handleFieldChange("postalCode", e.target.value)} aria-invalid={!!fe.postalCode} />
               </Field>
             </div>
             <Field label="State / Emirate" error={fe.state}>
-              <input name="state" autoComplete="address-level1" disabled={isLoading}
-                className={inputCls("state")} onChange={() => handleChange("state")} aria-invalid={!!fe.state} />
+              <input name="state" autoComplete="address-level1" disabled={isLoading} value={formValues.state}
+                className={inputCls("state")} onChange={(e) => handleFieldChange("state", e.target.value)} aria-invalid={!!fe.state} />
             </Field>
           </section>
 
