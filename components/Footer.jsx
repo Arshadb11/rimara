@@ -16,7 +16,7 @@ const columns = [
   },
   {
     title: "Support",
-    links: [["Contact", "/contact"], ["Shipping", "/contact"], ["Returns", "/contact"], ["FAQs", "/contact"], ["Terms & Conditions", "/terms-and-conditions"], ["Privacy Policy", "/contact"]]
+    links: [["Contact", "/contact"], ["Shipping", "/contact"], ["Returns", "/contact"], ["FAQs", "/contact"], ["Terms & Conditions", "/terms-and-conditions"], ["Privacy Policy", "/privacy-and-cookies"]]
   }
 ];
 

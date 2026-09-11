@@ -2544,3 +2544,39 @@ h3 {
   line-height: 1.35;
   color: var(--rimara-ink);
 }
+
+.tc-list {
+  margin: 0 0 18px;
+  padding-left: 20px;
+}
+
+.tc-list li {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--rimara-ink) 78%, transparent);
+  margin-bottom: 8px;
+}
+
+.tc-list li:last-child {
+  margin-bottom: 0;
+}
+
+.tc-list--numbered {
+  list-style: decimal;
+}
+
+.tc-list--numbered li strong {
+  font-weight: 600;
+  color: var(--rimara-ink);
+}
+
+.tc-preamble a {
+  color: var(--rimara-ink);
+  border-bottom: 1px solid var(--rimara-border);
+  transition: border-color 200ms;
+}
+
+.tc-preamble a:hover {
+  border-color: var(--rimara-ink);
+}
