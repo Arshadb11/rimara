@@ -1,42 +1,18 @@
-export const metadata = {
-  title: "Contact Us",
-  description: "Get in touch with Rimara — care@rimara.ae, IFZA Business Park, Silicon Oasis, Dubai, U.A.E.",
-};
+import { LineReveal, Reveal } from "@/components/Reveal";
+
+export const metadata = { title: "Contact", description: "Contact Rimara." };
 
 export default function ContactPage() {
   return (
-    <main className="tc-page">
-      <div className="tc-container">
-
-        {/* ── Page Title ── */}
-        <header className="tc-page-header">
-          <p className="tc-kicker">Get in Touch</p>
-          <h1 className="tc-title">Contact Us</h1>
-        </header>
-
-        {/* ── Contact Details ── */}
-        <div className="tc-preamble">
-          <p>
-            &ldquo;rimara PARFUMS&rdquo; is a registered trademark of Sillage FZCO. For any
-            enquiries, please reach out to us using the details below.
-          </p>
-        </div>
-
-        <div className="tc-section">
-          <h2 className="tc-section-title">Address</h2>
-          <p>Sillage FZCO</p>
-          <p>IFZA Business Park, Silicon Oasis</p>
-          <p>Dubai, U.A.E.</p>
-        </div>
-
-        <div className="tc-section">
-          <h2 className="tc-section-title">Email</h2>
-          <p>
-            <a className="tc-contact-link" href="mailto:care@rimara.ae">care@rimara.ae</a>
-          </p>
-        </div>
-
-      </div>
+    <main>
+      <section className="page-hero">
+        <div><p className="eyebrow">Contact</p><h1><LineReveal>Speak softly. We will listen.</LineReveal></h1></div>
+        <Reveal><p className="body-copy muted">For fragrance enquiries, discovery packs, gifting, collaborations or stockist conversations, write to Rimara.</p></Reveal>
+      </section>
+      <section className="catalog-feature">
+        <div><p className="eyebrow">Email</p><h2><LineReveal>hello@rimara.example</LineReveal></h2></div>
+        <Reveal><p>Replace this placeholder with the official Rimara contact address when ready.</p><form className="newsletter-form"><input aria-label="Email address" type="email" placeholder="Email" /><button type="button">→</button></form></Reveal>
+      </section>
     </main>
   );
 }
