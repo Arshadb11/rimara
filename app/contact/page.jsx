@@ -1,6 +1,6 @@
 import { LineReveal, Reveal } from "@/components/Reveal";
 
-export const metadata = { title: "Contact", description: "Contact Rimara." };
+export const metadata = { title: "Contact", description: "Get in touch with Rimara — care@rimara.ae." };
 
 export default function ContactPage() {
   return (
@@ -10,8 +10,15 @@ export default function ContactPage() {
         <Reveal><p className="body-copy muted">For fragrance enquiries, discovery packs, gifting, collaborations or stockist conversations, write to Rimara.</p></Reveal>
       </section>
       <section className="catalog-feature">
-        <div><p className="eyebrow">Email</p><h2><LineReveal>hello@rimara.example</LineReveal></h2></div>
-        <Reveal><p>Replace this placeholder with the official Rimara contact address when ready.</p><form className="newsletter-form"><input aria-label="Email address" type="email" placeholder="Email" /><button type="button">→</button></form></Reveal>
+        <div>
+          <p className="eyebrow">Email</p>
+          <h2><LineReveal>care@rimara.ae</LineReveal></h2>
+        </div>
+        <Reveal>
+          <p className="eyebrow">Address</p>
+          <p>&ldquo;rimara PARFUMS&rdquo; is a registered trademark of Sillage FZCO</p>
+          <p>IFZA Business Park, Silicon Oasis, Dubai, U.A.E.</p>
+        </Reveal>
       </section>
     </main>
   );
