@@ -13,6 +13,7 @@ export default function ProductPurchase({ product }) {
 
   // Default to first variation (not a hardcoded size)
   const [size, setSize] = useState(() => product.variations?.[0]?.name ?? "");
+  const [productId, setProductId] = useState(() => product.variations?.[0]?.id ?? "");
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
 
@@ -26,7 +27,7 @@ export default function ProductPurchase({ product }) {
       size,
       price: priceMap[size] ?? 0,
       // full backend product fields for checkout payload
-      product_id: product.product_id,
+      product_id: productId,
       product_name: product.product_name,
       product_name_ar: product.product_name_ar || null,
       images: product.images,
@@ -51,10 +52,10 @@ export default function ProductPurchase({ product }) {
             <label key={option.name} className={size === option.name ? "is-selected" : ""}>
               <input
                 type="radio"
-                name={`fragrance-size-${product.product_id}`}
+                name={`fragrance-size-${option.id}`}
                 value={option.name}
                 checked={size === option.name}
-                onChange={() => { setSize(option.name); setAdded(false); }}
+                onChange={() => { setSize(option.name); setProductId(option.id); setAdded(false); }}
               />
               <span>{option.name}</span>
             </label>

@@ -82,6 +82,8 @@ export function LoginForm() {
         const userPayload = {
           name: data.data?.name || "Rimara Customer",
           email: data.data?.email || email,
+          mobile: data.data?.phone || null,
+          address: data?.address || null,
           token: data.access_token
         };
         window.localStorage.setItem("rimaraUser", JSON.stringify(userPayload));
@@ -163,6 +165,7 @@ export function RegisterForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    mobile: "",
     password: "",
     "confirm-password": ""
   });
@@ -187,6 +190,7 @@ export function RegisterForm() {
     // Client-side validation
     const name = formData.name.trim();
     const email = formData.email.trim();
+    const mobile = formData.mobile.trim();
     const password = formData.password;
     const confirmPassword = formData["confirm-password"];
 
@@ -201,6 +205,12 @@ export function RegisterForm() {
       newErrors.email = "Email address is required.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!mobile) {
+      newErrors.mobile = "Mobile number is required.";
+    } else if (!/^\d{10}$/.test(mobile)) {
+      newErrors.mobile = "Please enter a valid mobile number.";
     }
 
     if (!password) {
@@ -233,6 +243,7 @@ export function RegisterForm() {
         body: JSON.stringify({
           name,
           email,
+          mobile,
           password
         })
       });
@@ -240,14 +251,15 @@ export function RegisterForm() {
       const data = await response.json().catch(() => ({}));
 
       if (response.ok && data?.message === "Customer Registered Successfully") {
-        setGlobalMessage("Success! Account created. Redirecting...");
+        setGlobalMessage("Success! Account created...");
+        setIsLoading(false);
         // Save to local storage
-        const userPayload = { name, email, token: data.access_token };
-        window.localStorage.setItem("rimaraUser", JSON.stringify(userPayload));
+        // const userPayload = { name, email, token: data.access_token };
+        // window.localStorage.setItem("rimaraUser", JSON.stringify(userPayload));
         // Redirect to /account after a short delay
-        setTimeout(() => {
-          window.location.href = "/account";
-        }, 1500);
+        // setTimeout(() => {
+        //   window.location.href = "/account";
+        // }, 1500);
       } else if (data?.message === "Duplicate Email Id") {
         setErrors({ email: "This email address is already registered." });
         setIsLoading(false);
@@ -304,6 +316,24 @@ export function RegisterForm() {
         {errors.email && (
           <span style={{ color: "var(--rimara-copper)", font: "12px var(--font-ui)", marginTop: "2px" }}>
             {errors.email}
+          </span>
+        )}
+      </label>
+      <label>
+        <span>Mobile number</span>
+        <input
+          type="text"
+          name="mobile"
+          placeholder="0500000000"
+          autoComplete="mobile"
+          value={formData.mobile}
+          onChange={handleChange}
+          disabled={isLoading}
+          required
+        />
+        {errors.mobile && (
+          <span style={{ color: "var(--rimara-copper)", font: "12px var(--font-ui)", marginTop: "2px" }}>
+            {errors.mobile}
           </span>
         )}
       </label>
