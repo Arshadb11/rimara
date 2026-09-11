@@ -1,5 +1,3 @@
-import { LineReveal, Reveal } from "@/components/Reveal";
-
 export const metadata = {
   title: "Terms & Conditions",
   description: "Terms and Conditions for using the Rimara website, operated by Sillage FZCO.",
@@ -57,61 +55,43 @@ const sections = [
 
 export default function TermsAndConditionsPage() {
   return (
-    <main>
-      {/* ── Page Hero ── */}
-      <section className="page-hero tc-hero">
-        <div>
-          <p className="eyebrow">Legal</p>
-          <h1>
-            <LineReveal>Terms &amp; Conditions</LineReveal>
-          </h1>
-        </div>
-        <Reveal>
-          <p className="body-copy-large">
-            Please read these terms carefully before using the Site.
-          </p>
-        </Reveal>
-      </section>
+    <main className="tc-page">
+      <div className="tc-container">
+        {/* ── Page Title ── */}
+        <header className="tc-page-header">
+          <p className="tc-kicker">Legal</p>
+          <h1 className="tc-title">Terms &amp; Conditions</h1>
+        </header>
 
-      {/* ── Preamble ── */}
-      <section className="tc-preamble">
-        <Reveal>
-          <p className="tc-lead">
+        {/* ── Preamble ── */}
+        <div className="tc-preamble">
+          <p>
             Welcome to the rimara.ae website (&ldquo;Site&rdquo;). These Terms and Conditions
             (&ldquo;T&amp;Cs&rdquo;) apply to the Site, which is operated and administered by
             Sillage FZCO and all its divisions, subsidiaries, and affiliate operated Internet
             sites which reference these T&amp;Cs.
           </p>
-          <p className="tc-lead">
-            By accessing the Site, you confirm your understanding of the T&amp;Cs. If you do
-            not agree to these T&amp;Cs of use, you shall not use this Site. The Site reserves
-            the right, to change, modify, add, or remove portions of these T&amp;Cs of use at
-            any time. Changes will be effective when posted on the Site with no other notice
-            provided. Please check these T&amp;Cs of use regularly for updates. Your continued
-            use of the Site following the posting of changes to these T&amp;Cs of use
-            constitutes your acceptance of those changes.
+          <p>
+            By accessing the Site, you confirm your understanding of the T&amp;Cs. If you do not
+            agree to these T&amp;Cs of use, you shall not use this Site. The Site reserves the
+            right, to change, modify, add, or remove portions of these T&amp;Cs of use at any
+            time. Changes will be effective when posted on the Site with no other notice provided.
+            Please check these T&amp;Cs of use regularly for updates. Your continued use of the
+            Site following the posting of changes to these T&amp;Cs of use constitutes your
+            acceptance of those changes.
           </p>
-        </Reveal>
-      </section>
+        </div>
 
-      {/* ── Sections ── */}
-      {sections.map((section, index) => (
-        <section key={section.title} className="tc-section">
-          <Reveal className="tc-section__inner">
-            <div className="tc-section__header">
-              <span className="tc-section__number">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <h2>{section.title}</h2>
-            </div>
-            <div className="tc-section__body">
-              {section.content.map((paragraph, pIndex) => (
-                <p key={pIndex}>{paragraph}</p>
-              ))}
-            </div>
-          </Reveal>
-        </section>
-      ))}
+        {/* ── Sections ── */}
+        {sections.map((section) => (
+          <div key={section.title} className="tc-section">
+            <h2 className="tc-section-title">{section.title}</h2>
+            {section.content.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
