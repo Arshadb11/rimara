@@ -12,11 +12,11 @@ const columns = [
   },
   {
     title: "Explore",
-    links: [["Concept", "/concept"], ["Story", "/story"], ["Perfumers", "/perfumers"], ["Sillage", "/"]]
+    links: [["Concept", "/concept"], ["Story", "/story"], ["Perfumers", "/perfumers"], ["FAQs", "/contact"], ["Sillage", "/"]]
   },
   {
     title: "Support",
-    links: [["Contact", "/contact"], ["Shipping", "/delivery"], ["Returns", "/returns"], ["FAQs", "/contact"], ["Payments", "/payments"], ["Terms & Conditions", "/terms-and-conditions"], ["Privacy Policy", "/privacy-and-cookies"], ["Liability & Disclaimers", "/liability"]]
+    links: [["Contact", "/contact"], ["Shipping", "/delivery"], ["Returns", "/returns"], ["Payments", "/payments"], ["Terms & Conditions", "/terms-and-conditions"], ["Privacy Policy", "/privacy-and-cookies"], ["Liability & Disclaimers", "/liability"]]
   }
 ];
 

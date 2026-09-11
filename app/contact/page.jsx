@@ -15,8 +15,8 @@ export default function ContactPage() {
           <h2><LineReveal>care@rimara.ae</LineReveal></h2>
         </div>
         <Reveal>
-          <p className="eyebrow">Address</p>
-          <p>&ldquo;rimara PARFUMS&rdquo; is a registered trademark of Sillage FZCO</p>
+          <p className="eyebrow">CONTACT US</p>
+          <p>&ldquo;Rimara Parfums&rdquo; is a registered trademark of Sillage FZCO</p>
           <p>IFZA Business Park, Silicon Oasis, Dubai, U.A.E.</p>
         </Reveal>
       </section>
