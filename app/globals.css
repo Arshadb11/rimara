@@ -2580,3 +2580,13 @@ h3 {
 .tc-preamble a:hover {
   border-color: var(--rimara-ink);
 }
+
+.tc-contact-link {
+  color: var(--rimara-ink);
+  border-bottom: 1px solid var(--rimara-border);
+  transition: border-color 200ms;
+}
+
+.tc-contact-link:hover {
+  border-color: var(--rimara-ink);
+}
