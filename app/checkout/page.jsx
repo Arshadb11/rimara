@@ -272,6 +272,7 @@ export default function CheckoutPage() {
   const deliveryFee   = parseFloat(shippingCharges[0]?.price  ?? 20);
   const serviceFeeNum = parseFloat(shippingCharges[1]?.price  ?? 0);
   const codFeeNum     = parseFloat(shippingCharges[2]?.price  ?? 0);
+  const shippingThreshold   = parseFloat(shippingCharges[3]?.price  ?? 0);
 
   // ── Pricing ───────────────────────────────────────────────────────────────
   const discountedSubtotal = items.reduce(
@@ -280,7 +281,7 @@ export default function CheckoutPage() {
   const totalDiscount = parseFloat((subtotal - discountedSubtotal).toFixed(2));
   const hasDiscount   = totalDiscount > 0;
 
-  const isFreeShipping   = discountedSubtotal >= freeShippingAbove;
+  const isFreeShipping   = discountedSubtotal >= shippingThreshold;
   const shippingPrice    = isFreeShipping ? 0 : deliveryFee;
   const shippingPriceVat = parseFloat(((shippingPrice / (1 + vatRate / 100)) * (vatRate / 100)).toFixed(2));
   const servicePrice     = shippingCharges[1]?.price ?? "0.00";
@@ -514,7 +515,7 @@ export default function CheckoutPage() {
               <legend className="sr-only">Choose payment method</legend>
               <div className="size-selector__options">
 
-                <label className={"size-selector__label" + (payMethod === "cod" ? " is-selected" : "")}
+                {/* <label className={"size-selector__label" + (payMethod === "cod" ? " is-selected" : "")}
                   style={{ minWidth: 0, padding: "16px 20px", flexDirection: "column", alignItems: "flex-start", gap: 4, cursor: "pointer" }}>
                   <input type="radio" name="paymentMethod" value="cod"
                     checked={payMethod === "cod"} onChange={() => setPayMethod("cod")}
@@ -524,7 +525,7 @@ export default function CheckoutPage() {
                   {codFeeNum > 0 && (
                     <span style={{ font: "11px var(--font-body)", opacity: 0.65 }}>+{formatPrice(codFeeNum)} fee</span>
                   )}
-                </label>
+                </label> */}
 
                 <label className={"size-selector__label" + (payMethod === "card" ? " is-selected" : "")}
                   style={{ minWidth: 0, padding: "16px 20px", flexDirection: "column", alignItems: "flex-start", gap: 4, cursor: "pointer" }}>

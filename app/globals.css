@@ -1522,9 +1522,11 @@ h3 {
   border-color: #b91c1c;
   outline: none;
 }
+
 .checkout-form input.is-invalid:focus {
   outline: 2px solid #b91c1c;
 }
+
 .field-error {
   display: block;
   font: 11px var(--font-body);
@@ -1533,6 +1535,7 @@ h3 {
   text-transform: none;
   margin-top: 4px;
 }
+
 .checkout-error {
   padding: 14px 18px;
   border: 1px solid #b91c1c;
@@ -1763,6 +1766,36 @@ h3 {
   opacity: 0.6;
   cursor: not-allowed;
   background: color-mix(in srgb, var(--rimara-stone) 20%, transparent);
+}
+
+.auth-checkbox-label {
+  display: flex !important;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  margin-top: 4px;
+  user-select: none;
+}
+
+.auth-checkbox-label input[type="checkbox"] {
+  width: 18px !important;
+  min-height: 18px !important;
+  height: 18px !important;
+  padding: 0 !important;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: var(--rimara-ink);
+  flex-shrink: 0;
+}
+
+.auth-checkbox-label span {
+  font-family: var(--font-ui) !important;
+  font-size: 13px !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  color: color-mix(in srgb, var(--rimara-ink) 85%, transparent);
+  line-height: 1.4;
 }
 
 .auth-page,
