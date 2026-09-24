@@ -5,48 +5,45 @@ import ProductCard from "@/components/ProductCard";
 import { HairlineDraw, LineReveal, Reveal, Stagger } from "@/components/Reveal";
 
 export default async function HomePage() {
-  const response = await fetch(
-    // "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/allProducts",
-    "http://localhost/rimara-admin/public/api/allProducts",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Origin": "http://localhost:3000",
-      },
-      body: JSON.stringify({
-        limit: "4",
-        page: "1",
-      }),
-      cache: "no-store",
+  let products = homeProducts;
+
+  try {
+    const response = await fetch(
+      // "https://phpstack-1448119-6605392.cloudwaysapps.com/public/api/allProducts",
+      "http://localhost/rimara-admin/public/api/allProducts",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Origin": "http://localhost:3000",
+        },
+        body: JSON.stringify({
+          limit: "4",
+          page: "1",
+        }),
+        cache: "no-store",
+      }
+    );
+
+    const apiResponse = await response.json();
+
+    const productSettings = {
+      "quiet-blossom": { color: "#d4a0a8", ctx: "Explore Quiet Blossom" },
+      "wild-air":      { color: "#8ab0c8", ctx: "Explore Wild Air" },
+      "last-light":    { color: "#e0a040", ctx: "Explore Last Light" },
+      "air-that-stays":{ color: "#b3a469", ctx: "Explore Air That Stays" },
+    };
+
+    if (Array.isArray(apiResponse?.data) && apiResponse.data.length > 0) {
+      products = apiResponse.data.map((product) => ({
+        ...product,
+        ...(productSettings[(product.product_name ?? "").toLowerCase().trim().replace(/\s+/g, "-")] || {}),
+      }));
     }
-  );
+  } catch {
+    // API unavailable (e.g. on Vercel) — fall back to static data above
+  }
 
-  const apiResponse = await response.json();
-
-  const productSettings = {
-    "quiet-blossom": {
-      color: "#d4a0a8",
-      ctx: "Explore Quiet Blossom",
-    },
-    "wild-air": {
-      color: "#8ab0c8",
-      ctx: "Explore Wild Air",
-    },
-    "last-light": {
-      color: "#e0a040",
-      ctx: "Explore Last Light",
-    },
-    "air-that-stays": {
-      color: "#b3a469",
-      ctx: "Explore Air That Stays",
-    },
-  };
-
-  const products = (apiResponse?.data || []).map((product) => ({
-    ...product,
-    ...(productSettings[product.product_name.toLowerCase().trim().replace(/\s+/g, '-')] || {}),
-  }));
 
   return (
     <main>
