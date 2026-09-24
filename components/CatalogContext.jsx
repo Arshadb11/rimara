@@ -26,7 +26,7 @@ const CatalogContext = createContext({
   shippingCharges:   [],   // raw shipping_service_charges array from API
   vatRate:           5,    // percentage number (e.g. 5 for 5%)
   currency:          "AED",
-  freeShippingAbove: 500,  // parsed from shippingCharges[0].free_above
+  freeShippingAbove: 100,  // parsed from shippingCharges[0].free_above
 });
 
 /**
@@ -37,7 +37,7 @@ const CatalogContext = createContext({
  */
 export function CatalogProvider({ categories = [], shippingCharges = [], vatRate = 5, currency = "AED", children }) {
   // Derive the free-shipping threshold from the API response
-  const freeShippingAbove = parseFloat(shippingCharges[0]?.free_above ?? 500);
+  const freeShippingAbove = parseFloat(shippingCharges[0]?.free_above ?? 100);
 
   return (
     <CatalogContext.Provider value={{ categories, shippingCharges, vatRate, currency, freeShippingAbove }}>

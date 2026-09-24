@@ -167,15 +167,19 @@ export function RegisterForm() {
     email: "",
     mobile: "",
     password: "",
-    "confirm-password": ""
+    "confirm-password": "",
+    optOutMarketing: false
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [globalMessage, setGlobalMessage] = useState("");
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value
+    }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -244,7 +248,8 @@ export function RegisterForm() {
           name,
           email,
           mobile,
-          password
+          password,
+          opt_out_marketing: formData.optOutMarketing
         })
       });
 
@@ -372,6 +377,16 @@ export function RegisterForm() {
             {errors["confirm-password"]}
           </span>
         )}
+      </label>
+      <label className="auth-checkbox-label">
+        <input
+          type="checkbox"
+          name="optOutMarketing"
+          checked={formData.optOutMarketing}
+          onChange={handleChange}
+          disabled={isLoading}
+        />
+        <span>Opt out of receiving marketing communications and promotional updates</span>
       </label>
       {globalMessage ? <p className="auth-message">{globalMessage}</p> : null}
       <button type="submit" disabled={isLoading}>

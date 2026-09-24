@@ -1784,6 +1784,36 @@ h3 {
   background: color-mix(in srgb, var(--rimara-stone) 20%, transparent);
 }
 
+.auth-checkbox-label {
+  display: flex !important;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  margin-top: 4px;
+  user-select: none;
+}
+
+.auth-checkbox-label input[type="checkbox"] {
+  width: 18px !important;
+  min-height: 18px !important;
+  height: 18px !important;
+  padding: 0 !important;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: var(--rimara-ink);
+  flex-shrink: 0;
+}
+
+.auth-checkbox-label span {
+  font-family: var(--font-ui) !important;
+  font-size: 13px !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  color: color-mix(in srgb, var(--rimara-ink) 85%, transparent);
+  line-height: 1.4;
+}
+
 .auth-page,
 .account-hero {
   display: grid;
