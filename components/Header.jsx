@@ -11,7 +11,7 @@ const nav = [
   ["Concept", "/concept"],
   ["Diagnostic", "/diagnostic"],
   ["Story", "/story"],
-  ["Perfumers", "/perfumers"],
+  // ["Perfumers", "/perfumers"],
   ["Contact", "/contact"]
 ];
 

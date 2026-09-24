@@ -813,18 +813,32 @@ h3 {
   line-height: 1.5;
 }
 
+/* Footer below the 3-panel grid — centred */
+.diagnostic-form-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+  text-align: center;
+}
+
 .diagnostic-actions {
-  display: grid;
-  gap: 12px;
-  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
 }
 
 .diagnostic-actions button,
 .diagnostic-actions a {
-  min-height: 48px;
+  min-height: 52px;
+  min-width: 200px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0 32px;
   border: 1px solid var(--rimara-ink);
   background: var(--rimara-ink);
   color: var(--rimara-ivory);
@@ -832,6 +846,8 @@ h3 {
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 200ms, background 200ms;
 }
 
 .diagnostic-actions a {
@@ -1522,9 +1538,11 @@ h3 {
   border-color: #b91c1c;
   outline: none;
 }
+
 .checkout-form input.is-invalid:focus {
   outline: 2px solid #b91c1c;
 }
+
 .field-error {
   display: block;
   font: 11px var(--font-body);
@@ -1533,6 +1551,7 @@ h3 {
   text-transform: none;
   margin-top: 4px;
 }
+
 .checkout-error {
   padding: 14px 18px;
   border: 1px solid #b91c1c;
@@ -2193,6 +2212,10 @@ h3 {
     border-bottom: 0;
   }
 
+  .diagnostic-form-footer {
+    margin-top: 32px;
+  }
+
   .hero {
     min-height: calc(100svh - 105px);
   }
@@ -2310,6 +2333,12 @@ h3 {
 
   .diagnostic-form__panel {
     padding: 28px 20px;
+  }
+
+  .diagnostic-actions button,
+  .diagnostic-actions a {
+    min-width: 0;
+    width: 100%;
   }
 
   .product-visual {
@@ -2579,4 +2608,247 @@ h3 {
 
 .tc-preamble a:hover {
   border-color: var(--rimara-ink);
+}
+
+/* ── Diagnostic Result Modal ─────────────────────────────────────────────── */
+
+.diagnostic-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px var(--page-gutter);
+  background: color-mix(in srgb, var(--rimara-ink) 72%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.diagnostic-modal {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 1020px;
+  max-height: 90vh;
+  overflow: hidden;
+  background: var(--rimara-ivory);
+  box-shadow: 0 48px 120px color-mix(in srgb, var(--rimara-ink) 40%, transparent);
+}
+
+/* Left — image */
+.diagnostic-modal__media {
+  position: relative;
+  min-height: 540px;
+  background: var(--rimara-stone);
+  overflow: hidden;
+}
+
+.diagnostic-modal__img {
+  object-fit: contain;
+  padding: 40px;
+  transition: transform 600ms var(--ease-rimara);
+}
+
+.diagnostic-modal:hover .diagnostic-modal__img {
+  transform: scale(1.03);
+}
+
+/* Accent bar on left edge */
+.diagnostic-modal__media::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--modal-accent, #b3a469);
+  z-index: 1;
+}
+
+/* Right — content */
+.diagnostic-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 52px 48px 48px;
+  overflow-y: auto;
+  border-left: 1px solid var(--rimara-border);
+}
+
+.diagnostic-modal__match-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-family: var(--font-label);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--modal-accent, #b3a469);
+}
+
+.diagnostic-modal__match-label::before {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: currentColor;
+}
+
+.diagnostic-modal__name {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 58px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 6px;
+}
+
+.diagnostic-modal__occasion {
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--rimara-ink) 48%, transparent);
+  margin-bottom: 20px;
+}
+
+.diagnostic-modal__divider {
+  width: 48px;
+  height: 1px;
+  background: var(--rimara-border);
+  margin-bottom: 20px;
+}
+
+.diagnostic-modal__classification {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.diagnostic-modal__tag {
+  padding: 4px 12px;
+  border: 1px solid var(--rimara-border);
+  font-family: var(--font-label);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--rimara-ink) 64%, transparent);
+}
+
+.diagnostic-modal__description {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--rimara-ink) 80%, transparent);
+  margin-bottom: 28px;
+}
+
+.diagnostic-modal__price {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 28px;
+  color: var(--rimara-ink);
+}
+
+.diagnostic-modal__price span {
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--rimara-ink) 48%, transparent);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.diagnostic-modal__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.diagnostic-modal__cta-primary {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 24px;
+  background: var(--rimara-ink);
+  color: var(--rimara-ivory);
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid var(--rimara-ink);
+  cursor: pointer;
+  transition: background 220ms, color 220ms;
+}
+
+.diagnostic-modal__cta-primary:hover {
+  background: var(--rimara-charcoal);
+  border-color: var(--rimara-charcoal);
+}
+
+.diagnostic-modal__cta-secondary {
+  padding: 14px 20px;
+  background: transparent;
+  color: var(--rimara-ink);
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--rimara-border);
+  cursor: pointer;
+  transition: border-color 220ms;
+}
+
+.diagnostic-modal__cta-secondary:hover {
+  border-color: var(--rimara-ink);
+}
+
+/* Close button */
+.diagnostic-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--rimara-border);
+  background: var(--rimara-ivory);
+  color: var(--rimara-ink);
+  cursor: pointer;
+  transition: background 180ms, border-color 180ms;
+}
+
+.diagnostic-modal__close:hover {
+  background: var(--rimara-ink);
+  color: var(--rimara-ivory);
+  border-color: var(--rimara-ink);
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .diagnostic-modal {
+    grid-template-columns: 1fr;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  .diagnostic-modal__media {
+    min-height: 280px;
+  }
+
+  .diagnostic-modal__body {
+    padding: 36px 28px 32px;
+  }
 }

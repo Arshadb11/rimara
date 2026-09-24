@@ -12,7 +12,7 @@ const columns = [
   },
   {
     title: "Explore",
-    links: [["Concept", "/concept"], ["Story", "/story"], ["Perfumers", "/perfumers"], ["FAQs", "/contact"], ["Sillage", "/"]]
+    links: [["Concept", "/concept"], ["Story", "/story"], /* ["Perfumers", "/perfumers"], */ ["FAQs", "/contact"], ["Sillage", "/"]]
   },
   {
     title: "Support",

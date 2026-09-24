@@ -1,163 +1,113 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { HairlineDraw, LineReveal, Reveal, ease } from "@/components/Reveal";
 
-const noteGroups = [
-  {
-    id: "top-note",
-    label: "Top note",
-    helper: "The first air around the fragrance.",
-    options: ["Bergamot", "Pink pepper", "Green leaves", "Fresh air", "Soft citrus"],
-  },
-  {
-    id: "middle-note",
-    label: "Middle note",
-    helper: "The heart that stays close to skin.",
-    options: ["Lily", "Amber", "Moss", "Fougere", "Dry woods"],
-  },
-  {
-    id: "low-note",
-    label: "Low note",
-    helper: "The final trace left in the room.",
-    options: ["Oud", "Patchouli", "Ambered woods", "Musk", "Warm resin"],
-  },
-];
+/* Fragrance index order */
+// All weight arrays are indexed as: [quiet-blossom, wild-air, air-that-stays, last-light]
+const SLUGS = ["quiet-blossom", "wild-air", "air-that-stays", "last-light"];
 
-/* ── Scoring engine ──────────────────────────────────────────────────────── */
-/**
- * Scores a product against the user's selections.
- * Design principles:
- *  1. Hour must be an EXACT phrase match — no loose fallbacks that hit every product.
- *  2. Notes use PRODUCT-SPECIFIC keywords, not generic adjectives.
- *  3. Minimum threshold of 8 is required to appear — loose one-word hits are not enough.
- *  4. Results are capped at 3 — this is a recommendation, not a catalogue.
- *
- * Known products and their distinguishing text in the real API:
- *  Air That Stays  — occasion: "deep desert night · 02:00" | classification: "Oud"
- *  Last Light      — occasion: "golden hour"               | classification: "Amber · Moss"
- *  Wild Air        — occasion: "midday heat"               | classification: "Fougere · Woody"
- *  Quiet Blossom   — occasion: "before dawn"               | classification: "Lily · Women's"
- */
-function scoreProduct(product, form) {
-  let score = 0;
+/* Weight tables */
+const EVENT_WEIGHTS = {
+  date:     [2, 0, 2, 1],
+  casual:   [1, 2, 0, 1],
+  occasion: [1, 0, 2, 2],
+  party:    [0, 2, 1, 1],
+};
 
-  // Separate search targets for precision
-  const occasion   = (product.occasion || "").toLowerCase();
-  const classify   = (product.item_classification || "").toLowerCase();
-  const prose      = (product.description || "").replace(/<[^>]+>/g, " ").toLowerCase();
-  const all        = `${occasion} ${classify} ${prose}`;
+const FEELING_WEIGHTS = {
+  intimate: [3, 0, 3, 1],
+  wild:     [0, 3, 1, 0],
+  warm:     [1, 0, 2, 3],
+  lasting:  [2, 0, 3, 2],
+};
 
-  // ── Hour — EXACT phrase in the occasion field only ──────────────────────
-  // Every product has a unique occasion. Only award points when it's a clear match.
-  // No vague fallback keywords — that's what was causing everything to match.
-  const hourPhrases = {
-    "before dawn":       ["before dawn", "04:"],
-    "midday heat":       ["midday heat", "midday", "13:"],
-    "golden hour":       ["golden hour", "18:"],
-    "deep desert night": ["deep desert night", "desert night", "02:"],
-  };
-  const hourKey = (form.hour || "").toLowerCase();
-  if (hourKey && hourPhrases[hourKey]) {
-    if (hourPhrases[hourKey].some((ph) => occasion.includes(ph))) {
-      score += 8; // Strong signal — occasion is a near-unique identifier
-    }
-    // No else: a mismatched hour earns 0 pts (acts as a soft disqualifier)
+const PRESENCE_WEIGHTS = {
+  "soft & close":     [3, 0, 1, 1],
+  "clean & moving":   [1, 3, 0, 1],
+  "warm & intimate":  [1, 0, 3, 3],
+  "deep & memorable": [1, 0, 3, 3],
+};
+
+const TEXTURE_WEIGHTS = {
+  clean:  [2, 3, 0, 1],
+  floral: [3, 0, 0, 0],
+  musky:  [3, 0, 1, 1],
+  woody:  [0, 2, 3, 3],
+};
+
+const CITY_WEIGHTS = {
+  paris:      [3, 0, 1, 1],
+  santorini:  [3, 1, 0, 1],
+  "new york": [0, 3, 1, 1],
+  tokyo:      [0, 3, 0, 1],
+  london:     [0, 0, 3, 2],
+  marrakech:  [0, 0, 3, 2],
+  milan:      [0, 1, 1, 3],
+  dubai:      [0, 0, 2, 3],
+};
+
+/* Gender exclusion mask */
+function genderMask(who) {
+  switch ((who || "").toLowerCase()) {
+    case "him":    return [false, true,  true,  true];
+    case "her":    return [true,  false, true,  true];
+    case "unisex": return [false, false, true,  true];
+    default:       return [true,  true,  true,  true];
   }
-
-  // ── Feeling — prose adjectives that are SPECIFIC to each product ─────────
-  // Avoid generic words ("soft", "deep", "open") that appear in every product.
-  const feelingMap = {
-    quiet:   ["quiet", "intimate", "before it is explained", "gentle"],         // Quiet Blossom
-    wild:    ["wild", "movement", "alive", "forward motion", "energy"],          // Wild Air
-    warm:    ["golden", "warmth", "low sun", "glow", "amber warmth"],            // Last Light
-    lasting: ["stays after", "difficult to forget", "stays quietly", "oud", "trail that stays"], // Air That Stays
-  };
-  const feelingKey = (form.feeling || "").toLowerCase();
-  if (feelingKey && feelingMap[feelingKey]) {
-    const hits = feelingMap[feelingKey].filter((kw) => all.includes(kw)).length;
-    score += hits * 3; // up to several points but requires real keyword hits
-  }
-
-  // ── Presence — trail character ────────────────────────────────────────────
-  const presenceMap = {
-    "soft and close":     ["close to skin", "stays near", "musky", "musk", "intimate"],
-    "clean and moving":   ["clean", "fougere", "fougère", "movement", "forward motion"],
-    "warm and intimate":  ["warm", "intimate", "amber", "vanilla"],
-    "deep and memorable": ["stays after you leave", "memorable", "oud", "lasting trail"],
-  };
-  const presenceKey = (form.presence || "").toLowerCase();
-  if (presenceKey && presenceMap[presenceKey]) {
-    const hits = presenceMap[presenceKey].filter((kw) => all.includes(kw)).length;
-    score += hits * 3;
-  }
-
-  // ── Top note — product-specific keywords ─────────────────────────────────
-  // Only award points when the keyword is genuinely distinctive for that product
-  const topNoteMap = {
-    "bergamot":    ["bergamot"],               // Wild Air only
-    "pink pepper": ["pepper", "pink pepper"],
-    "green leaves": ["green", "leaves"],
-    "fresh air":   ["fresh air", "open air"],
-    "soft citrus": ["citrus", "lemon"],
-  };
-  const topKey = (form["top-note"] || "").toLowerCase();
-  if (topKey && topNoteMap[topKey]) {
-    if (topNoteMap[topKey].some((kw) => all.includes(kw))) score += 5;
-  }
-
-  // ── Middle note — heart of the fragrance ─────────────────────────────────
-  const midNoteMap = {
-    "lily":      ["lily", "white floral"],      // Quiet Blossom only
-    "amber":     ["amber", "oakmoss"],          // Last Light
-    "moss":      ["moss", "oakmoss"],            // Last Light only
-    "fougere":   ["fougere", "fougère", "lavender"], // Wild Air only
-    "dry woods": ["cedarwood", "cedar", "woody"],    // Wild Air
-  };
-  const midKey = (form["middle-note"] || "").toLowerCase();
-  if (midKey && midNoteMap[midKey]) {
-    if (midNoteMap[midKey].some((kw) => all.includes(kw))) score += 5;
-  }
-
-  // ── Low / base note ───────────────────────────────────────────────────────
-  const baseNoteMap = {
-    "oud":           ["oud"],                   // Air That Stays only
-    "patchouli":     ["patchouli"],             // Air That Stays only
-    "ambered woods": ["ambered woods", "dusk woods", "amber"],  // Last Light
-    "musk":          ["musk"],                  // Quiet Blossom only
-    "warm resin":    ["warm resin", "resin", "vanilla"],
-  };
-  const baseKey = (form["low-note"] || "").toLowerCase();
-  if (baseKey && baseNoteMap[baseKey]) {
-    if (baseNoteMap[baseKey].some((kw) => all.includes(kw))) score += 5;
-  }
-
-  // ── Texture — fragrance family ────────────────────────────────────────────
-  const textureMap = {
-    clean:   ["fougere", "fougère", "bergamot", "clean"],  // Wild Air
-    floral:  ["lily", "white floral", "blossom"],           // Quiet Blossom
-    woody:   ["fougere", "fougère", "cedarwood", "woody"],  // Wild Air
-    ambered: ["amber", "oud", "patchouli", "vanilla"],      // Air That Stays / Last Light
-  };
-  const textureKey = (form.texture || "").toLowerCase();
-  if (textureKey && textureMap[textureKey]) {
-    const hits = textureMap[textureKey].filter((kw) => all.includes(kw)).length;
-    score += hits * 3;
-  }
-
-  return score;
 }
 
-/* ── Product colour map ───────────────────────────────────────────────────── */
+/* Tie-break priority */
+const TIE_BREAK_ORDER = {
+  him:    [1, 2, 3, 0],
+  her:    [2, 3, 0, 1],
+  unisex: [2, 3, 0, 1],
+};
+
+function tiePriority(who, idx) {
+  const order = TIE_BREAK_ORDER[(who || "").toLowerCase()] || [0, 1, 2, 3];
+  const pos = order.indexOf(idx);
+  return pos === -1 ? 999 : pos;
+}
+
+/* Scoring engine */
+function scoreFragrances(form) {
+  const { who, event, feeling, presence, texture, city } = form;
+  const scores = [0, 0, 0, 0];
+
+  const add = (table, key) => {
+    const row = table[(key || "").toLowerCase()];
+    if (row) row.forEach((w, i) => { scores[i] += w; });
+  };
+
+  add(EVENT_WEIGHTS,    event);
+  add(FEELING_WEIGHTS,  feeling);
+  add(PRESENCE_WEIGHTS, presence);
+  add(TEXTURE_WEIGHTS,  texture);
+  add(CITY_WEIGHTS,     city);
+
+  const mask = genderMask(who);
+
+  return SLUGS
+    .map((slug, i) => ({ slug, score: mask[i] ? scores[i] : -1, idx: i }))
+    .filter((f) => f.score >= 0)
+    .sort((a, b) =>
+      b.score !== a.score
+        ? b.score - a.score
+        : tiePriority(who, a.idx) - tiePriority(who, b.idx)
+    );
+}
+
+/* Product colour map */
 const productSettings = {
   "quiet-blossom": { color: "#d4a0a8", ctx: "Explore Quiet Blossom" },
-  "wild-air": { color: "#8ab0c8", ctx: "Explore Wild Air" },
-  "last-light": { color: "#e0a040", ctx: "Explore Last Light" },
-  "air-that-stays": { color: "#b3a469", ctx: "Explore Air That Stays" },
-  "discovery-pack": { color: "#4a4a46", ctx: "Discover the pack" },
+  "wild-air":      { color: "#8ab0c8", ctx: "Explore Wild Air" },
+  "last-light":    { color: "#e0a040", ctx: "Explore Last Light" },
+  "air-that-stays":{ color: "#b3a469", ctx: "Explore Air That Stays" },
+  "discovery-pack":{ color: "#4a4a46", ctx: "Discover the pack" },
 };
 
 function slugify(name = "") {
@@ -170,134 +120,158 @@ function enrichProduct(product) {
   return { ...product, ...settings, slug };
 }
 
-/* ── Fragrance result card ───────────────────────────────────────────────── */
-function FragranceResultCard({ product, rank }) {
+/* Diagnostic Result Modal */
+function DiagnosticModal({ product, onClose, onReset }) {
   const href =
     product.slug === "discovery-pack"
       ? "/shop/discovery-pack"
       : `/shop/fragrances/${product.slug}`;
 
   const images = (() => {
-    try {
-      return JSON.parse(product.images);
-    } catch {
-      return [];
-    }
+    try { return JSON.parse(product.images); }
+    catch { return []; }
   })();
-
   const baseImg = images[0]
     ? `${process.env.NEXT_PUBLIC_API_URL}storage/${images[0]}`
     : null;
-  const hoverImg = images[1]
-    ? `${process.env.NEXT_PUBLIC_API_URL}storage/${images[1]}`
-    : baseImg;
+
+  const description = (product.description || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const tags = (product.item_classification || "")
+    .split(/[·,\/]/).map((t) => t.trim()).filter(Boolean);
+
+  const price = product.price
+    ? `AED ${parseFloat(product.price).toLocaleString()}`
+    : null;
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
 
   return (
-    <motion.article
-      className="fragrance-result-card"
-      style={{ "--result-accent": product.color || "#b3a469" }}
-      initial={{ opacity: 0, y: 32, filter: "blur(10px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.76, ease, delay: rank * 0.12 }}
+    <motion.div
+      className="diagnostic-modal-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.32, ease }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Your fragrance match: ${product.product_name}`}
     >
-      {rank === 0 && (
-        <div className="fragrance-result-card__badge">
-          <span>Best match</span>
-        </div>
-      )}
-      <Link href={href} className="fragrance-result-card__inner">
-        {baseImg && (
-          <div className="fragrance-result-card__media">
+      <motion.div
+        className="diagnostic-modal"
+        style={{ "--modal-accent": product.color || "#b3a469" }}
+        initial={{ opacity: 0, y: 40, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 24, scale: 0.98 }}
+        transition={{ duration: 0.48, ease }}
+      >
+        <button
+          className="diagnostic-modal__close"
+          onClick={onClose}
+          aria-label="Close result"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+            stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+            <path d="M1 1l12 12M13 1L1 13" strokeLinecap="round" />
+          </svg>
+        </button>
+
+        <div className="diagnostic-modal__media">
+          {baseImg && (
             <Image
-              className="fragrance-result-card__img fragrance-result-card__img--base"
+              className="diagnostic-modal__img"
               src={baseImg}
               alt={product.product_name}
               fill
-              sizes="(max-width: 768px) 100vw, 33vw"
+              sizes="(max-width: 720px) 100vw, 50vw"
+              priority
             />
-            {hoverImg && (
-              <Image
-                className="fragrance-result-card__img fragrance-result-card__img--hover"
-                src={hoverImg}
-                alt=""
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-            )}
-          </div>
-        )}
-        <div className="fragrance-result-card__body">
-          <span className="fragrance-result-card__accent" />
-          <p className="eyebrow">{product.occasion || "Rimara"}</p>
-          <h3>{product.product_name}</h3>
-          <p className="fragrance-result-card__notes">{product.item_classification}</p>
-          <p className="fragrance-result-card__copy">
-            {(product.description || "").replace(/<\/?p>/g, "")}
-          </p>
-          <span className="fragrance-result-card__cta">
-            {product.ctx || "Explore fragrance"}
-          </span>
+          )}
         </div>
-      </Link>
-    </motion.article>
-  );
-}
 
-/* ── No results state ────────────────────────────────────────────────────── */
-function NoResults({ onReset }) {
-  return (
-    <motion.div
-      className="diagnostic-no-results"
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.72, ease }}
-    >
-      <p className="eyebrow">No matches found</p>
-      <h3>Your air is still finding its match.</h3>
-      <p>
-        No fragrances matched your selections exactly. Try broadening your choices — or{" "}
-        <Link href="/shop/fragrances">browse the full collection</Link>.
-      </p>
-      <button className="button-primary" onClick={onReset} style={{ marginTop: 24 }}>
-        Start again
-      </button>
+        <div className="diagnostic-modal__body">
+          <p className="diagnostic-modal__match-label">Your Fragrance Match</p>
+          <h2 className="diagnostic-modal__name">{product.product_name}</h2>
+          {product.occasion && (
+            <p className="diagnostic-modal__occasion">{product.occasion}</p>
+          )}
+          <div className="diagnostic-modal__divider" />
+
+          {tags.length > 0 && (
+            <div className="diagnostic-modal__classification">
+              {tags.map((tag) => (
+                <span key={tag} className="diagnostic-modal__tag">{tag}</span>
+              ))}
+            </div>
+          )}
+
+          {description && (
+            <p className="diagnostic-modal__description">{description}</p>
+          )}
+
+          {price && (
+            <p className="diagnostic-modal__price">
+              {price}<span>incl. VAT</span>
+            </p>
+          )}
+
+          <div className="diagnostic-modal__actions">
+            <Link href={href} className="diagnostic-modal__cta-primary">
+              Explore Fragrance &rarr;
+            </Link>
+            <button
+              className="diagnostic-modal__cta-secondary"
+              onClick={() => { onClose(); onReset(); }}
+            >
+              Start again
+            </button>
+          </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
 
-/* ── Field labels (for validation messages) ─────────────────────────────── */
+/* Field labels */
 const FIELD_LABELS = {
-  hour:          "Hour",
-  feeling:       "Feeling",
-  presence:      "Presence",
-  "top-note":    "Top note",
-  "middle-note": "Middle note",
-  "low-note":    "Low note",
-  for:           "For",
-  texture:       "Texture",
+  who:      "Who is this for",
+  feeling:  "What is the Feeling",
+  city:     "City",
+  event:    "What is the Event",
+  texture:  "Texture",
+  presence: "Presence",
 };
 
-/* ── Main export ─────────────────────────────────────────────────────────── */
+/* Main export */
 export default function DiagnosticForm() {
   const [form, setForm] = useState({
-    hour: "",
-    feeling: "",
+    who:      "",
+    feeling:  "",
+    city:     "",
+    event:    "",
+    texture:  "",
     presence: "",
-    "top-note": "",
-    "middle-note": "",
-    "low-note": "",
-    for: "",
-    texture: "",
   });
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError]     = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const resultsRef = useRef(null);
 
-  // Which fields are still empty?
   const emptyFields = Object.keys(form).filter((k) => !form[k]);
-  const allFilled = emptyFields.length === 0;
+  const allFilled   = emptyFields.length === 0;
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -306,20 +280,21 @@ export default function DiagnosticForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitted(true);
-    if (!allFilled) return; // block submission — show validation message
+    if (!allFilled) return;
     setLoading(true);
     setError(null);
     setResults(null);
 
     try {
+      const ranking = scoreFragrances(form);
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}api/allProducts`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Origin:
-              process.env.NEXT_PUBLIC_DEFAULT_ORIGIN || "http://localhost:3000",
+            Origin: process.env.NEXT_PUBLIC_DEFAULT_ORIGIN || "http://localhost:3000",
           },
           body: JSON.stringify({ limit: "20", page: "1" }),
           cache: "no-store",
@@ -329,15 +304,19 @@ export default function DiagnosticForm() {
       if (!response.ok) throw new Error("Failed to fetch fragrances.");
 
       const data = await response.json();
-      const raw = data?.products?.data || [];
+      const raw  = data?.products?.data || [];
+      const enriched = raw.map((p) => enrichProduct(p));
 
-      const scored = raw
-        .map((p) => ({ ...enrichProduct(p), _score: scoreProduct(p, form) }))
-        .filter((p) => p._score >= 8)      // must meaningfully match — not just a stray word
-        .sort((a, b) => b._score - a._score)
-        .slice(0, 3);                       // diagnostic shows at most 3 recommendations
+      // Pick only the single best match
+      const best = ranking
+        .slice(0, 1)
+        .map(({ slug, score }) => {
+          const product = enriched.find((p) => p.slug === slug);
+          return product ? { ...product, _score: score } : null;
+        })
+        .filter(Boolean);
 
-      setResults(scored);
+      setResults(best.length > 0 ? best[0] : null);
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
@@ -349,26 +328,16 @@ export default function DiagnosticForm() {
   }
 
   function handleReset() {
-    setForm({
-      hour: "",
-      feeling: "",
-      presence: "",
-      "top-note": "",
-      "middle-note": "",
-      "low-note": "",
-      for: "",
-      texture: "",
-    });
+    setForm({ who: "", feeling: "", city: "", event: "", texture: "", presence: "" });
     setResults(null);
     setError(null);
     setSubmitted(false);
   }
 
-  const hasResults = results !== null;
+  const hasResult = results !== null;
 
   return (
     <>
-      {/* ── Form ─────────────────────────────────────────────────────────── */}
       <section className="diagnostic-form-section">
         <HairlineDraw />
         <Reveal>
@@ -380,83 +349,67 @@ export default function DiagnosticForm() {
           </div>
         </Reveal>
 
-        <form className="diagnostic-form" onSubmit={handleSubmit}>
-          {/* Panel 01 – Mood */}
+        <form id="diagnostic-form" className="diagnostic-form" onSubmit={handleSubmit}>
+          {/* Panel 01 - Who & Feeling */}
           <div className="diagnostic-form__panel diagnostic-form__panel--dark">
             <p className="eyebrow">01 / Mood</p>
             <label>
-              <span>Hour</span>
-              <select name="hour" value={form.hour} onChange={handleChange} required
-                className={submitted && !form.hour ? "select--error" : ""}>
-                <option value="" disabled>Select an hour</option>
-                <option>Before dawn</option>
-                <option>Midday heat</option>
-                <option>Golden hour</option>
-                <option>Deep desert night</option>
+              <span>Who is this for?</span>
+              <select name="who" value={form.who} onChange={handleChange} required
+                className={submitted && !form.who ? "select--error" : ""}>
+                <option value="" disabled>Select</option>
+                <option>Him</option>
+                <option>Her</option>
+                <option>Unisex</option>
               </select>
             </label>
             <label>
-              <span>Feeling</span>
+              <span>What is the Feeling?</span>
               <select name="feeling" value={form.feeling} onChange={handleChange} required
                 className={submitted && !form.feeling ? "select--error" : ""}>
                 <option value="" disabled>Select a feeling</option>
-                <option>Quiet</option>
+                <option>Intimate</option>
                 <option>Wild</option>
                 <option>Warm</option>
                 <option>Lasting</option>
               </select>
             </label>
+          </div>
+
+          {/* Panel 02 - City & Event */}
+          <div className="diagnostic-form__panel">
+            <p className="eyebrow">02 / Place &amp; Occasion</p>
             <label>
-              <span>Presence</span>
-              <select name="presence" value={form.presence} onChange={handleChange} required
-                className={submitted && !form.presence ? "select--error" : ""}>
-                <option value="" disabled>Select presence</option>
-                <option>Soft and close</option>
-                <option>Clean and moving</option>
-                <option>Warm and intimate</option>
-                <option>Deep and memorable</option>
+              <span>Which city are you in the mood of travelling?</span>
+              <select name="city" value={form.city} onChange={handleChange} required
+                className={submitted && !form.city ? "select--error" : ""}>
+                <option value="" disabled>Select a city</option>
+                <option>Paris</option>
+                <option>Santorini</option>
+                <option>New York</option>
+                <option>Tokyo</option>
+                <option>London</option>
+                <option>Marrakech</option>
+                <option>Milan</option>
+                <option>Dubai</option>
+              </select>
+            </label>
+            <label>
+              <span>What is the Event?</span>
+              <select name="event" value={form.event} onChange={handleChange} required
+                className={submitted && !form.event ? "select--error" : ""}>
+                <option value="" disabled>Select an event</option>
+                <option>Date</option>
+                <option>Casual</option>
+                <option>Occasion</option>
+                <option>Party</option>
               </select>
             </label>
           </div>
 
-          {/* Panel 02 – Notes */}
+          {/* Panel 03 - Texture & Presence */}
           <div className="diagnostic-form__panel">
-            <p className="eyebrow">02 / Notes</p>
-            {noteGroups.map((group) => (
-              <label key={group.id}>
-                <span>{group.label}</span>
-                <select
-                  name={group.id}
-                  value={form[group.id]}
-                  onChange={handleChange}
-                  required
-                  className={submitted && !form[group.id] ? "select--error" : ""}
-                >
-                  <option value="" disabled>
-                    Choose {group.label.toLowerCase()}
-                  </option>
-                  {group.options.map((opt) => (
-                    <option key={opt}>{opt}</option>
-                  ))}
-                </select>
-                <small>{group.helper}</small>
-              </label>
-            ))}
-          </div>
-
-          {/* Panel 03 – Wear */}
-          <div className="diagnostic-form__panel">
-            <p className="eyebrow">03 / Wear</p>
-            <label>
-              <span>For</span>
-              <select name="for" value={form.for} onChange={handleChange} required
-                className={submitted && !form.for ? "select--error" : ""}>
-                <option value="" disabled>Select wearer</option>
-                <option>Self</option>
-                <option>Gift</option>
-                <option>Shared ritual</option>
-              </select>
-            </label>
+            <p className="eyebrow">03 / Scent</p>
             <label>
               <span>Texture</span>
               <select name="texture" value={form.texture} onChange={handleChange} required
@@ -464,136 +417,94 @@ export default function DiagnosticForm() {
                 <option value="" disabled>Select texture</option>
                 <option>Clean</option>
                 <option>Floral</option>
+                <option>Musky</option>
                 <option>Woody</option>
-                <option>Ambered</option>
               </select>
             </label>
-            <div className="diagnostic-actions">
-              {submitted && !allFilled && (
-                <p className="diagnostic-validation-msg" role="alert">
-                  Please complete:{" "}
-                  {emptyFields.map((k) => FIELD_LABELS[k]).join(", ")}
-                </p>
-              )}
-              <button type="submit" disabled={loading} id="find-fragrance-btn">
-                {loading ? "Finding your air\u2026" : "Find your fragrance"}
-              </button>
-              <Link href="/shop/fragrances">View fragrances</Link>
-            </div>
+            <label>
+              <span>Presence</span>
+              <select name="presence" value={form.presence} onChange={handleChange} required
+                className={submitted && !form.presence ? "select--error" : ""}>
+                <option value="" disabled>Select presence</option>
+                <option>Soft &amp; Close</option>
+                <option>Clean &amp; Moving</option>
+                <option>Warm &amp; Intimate</option>
+                <option>Deep &amp; Memorable</option>
+              </select>
+            </label>
           </div>
         </form>
+
+        {/* Buttons below form, centered */}
+        <div className="diagnostic-form-footer">
+          {submitted && !allFilled && (
+            <p className="diagnostic-validation-msg" role="alert">
+              Please complete:{" "}
+              {emptyFields.map((k) => FIELD_LABELS[k]).join(", ")}
+            </p>
+          )}
+          <div className="diagnostic-actions">
+            <button type="submit" form="diagnostic-form" disabled={loading} id="find-fragrance-btn"
+              onClick={handleSubmit}>
+              {loading ? "Finding your air\u2026" : "Find your fragrance"}
+            </button>
+            {/* <Link href="/shop/fragrances">View All Fragrances</Link> */}
+          </div>
+          <div className="diagnostic-actions">
+            {/* <button type="submit" form="diagnostic-form" disabled={loading} id="find-fragrance-btn"
+              onClick={handleSubmit}>
+              {loading ? "Finding your air\u2026" : "Find your fragrance"}
+            </button> */}
+            <Link href="/shop/fragrances">View All Fragrances</Link>
+          </div>
+        </div>
       </section>
 
-      {/* ── Results / View Fragrance ──────────────────────────────────────── */}
-      <div ref={resultsRef}>
-        <AnimatePresence mode="wait">
-          {hasResults && (
-            <motion.section
-              key="vf-results"
-              className="diagnostic-results view-fragrance-results"
-              initial={{ opacity: 0, y: 32 }}
+      {/* Single Result Modal */}
+      <AnimatePresence>
+        {hasResult && results && (
+          <DiagnosticModal
+            key="diagnostic-modal"
+            product={results}
+            onClose={() => setResults(null)}
+            onReset={handleReset}
+          />
+        )}
+        {error && (
+          <motion.div
+            key="diagnostic-error"
+            className="diagnostic-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28 }}
+            onClick={(e) => { if (e.target === e.currentTarget) setError(null); }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 24 }}
-              transition={{ duration: 0.68, ease }}
-              aria-live="polite"
-              aria-label="Fragrance results"
+              exit={{ opacity: 0 }}
+              style={{
+                background: "var(--rimara-ivory)",
+                padding: "48px",
+                maxWidth: 480,
+                width: "100%",
+              }}
             >
-              {/* Section header */}
-              <div className="view-fragrance-header">
-                <Reveal>
-                  <div>
-                    <p className="eyebrow">View Fragrance</p>
-                    <h2>
-                      <LineReveal>
-                        {results.length > 0
-                          ? `${results.length} fragrance${results.length !== 1 ? "s" : ""} matched your air.`
-                          : "Your air is still finding its match."}
-                      </LineReveal>
-                    </h2>
-                  </div>
-                </Reveal>
-                <Reveal delay={0.1}>
-                  <button
-                    className="view-fragrance-reset"
-                    onClick={handleReset}
-                    aria-label="Reset and start the diagnostic again"
-                  >
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 13 13"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M1 6.5A5.5 5.5 0 1 0 2.07 3.07"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M1 1.5v2.5H3.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    Start again
-                  </button>
-                </Reveal>
-              </div>
+              <p className="eyebrow">Something went wrong</p>
+              <p style={{ margin: "16px 0 28px" }}>{error}</p>
+              <button
+                className="button-primary"
+                onClick={() => { setError(null); setSubmitted(false); }}
+              >
+                Try again
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-              {/* Error */}
-              {error && (
-                <Reveal>
-                  <div className="diagnostic-no-results">
-                    <p className="eyebrow">Something went wrong</p>
-                    <p>{error}</p>
-                    <button
-                      className="button-primary"
-                      onClick={handleReset}
-                      style={{ marginTop: 24 }}
-                    >
-                      Try again
-                    </button>
-                  </div>
-                </Reveal>
-              )}
-
-              {/* No results */}
-              {!error && results.length === 0 && (
-                <NoResults onReset={handleReset} />
-              )}
-
-              {/* Matched cards */}
-              {!error && results.length > 0 && (
-                <>
-                  <div className="view-fragrance-grid">
-                    {results.map((product, i) => (
-                      <FragranceResultCard
-                        key={product.product_id ?? product.product_name}
-                        product={product}
-                        rank={i}
-                      />
-                    ))}
-                  </div>
-
-                  <Reveal delay={0.32}>
-                    <div className="view-fragrance-footer">
-                      <p className="body-copy">
-                        Not feeling these? Browse everything we carry.
-                      </p>
-                      <Link className="button-secondary" href="/shop/fragrances">
-                        View all fragrances
-                      </Link>
-                    </div>
-                  </Reveal>
-                </>
-              )}
-            </motion.section>
-          )}
-        </AnimatePresence>
-      </div>
+      <div ref={resultsRef} aria-hidden="true" />
     </>
   );
 }
