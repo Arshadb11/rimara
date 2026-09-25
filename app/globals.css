@@ -21,6 +21,10 @@
   box-sizing: border-box;
 }
 
+a, button {
+  cursor: pointer;
+}
+
 html {
   scroll-behavior: auto;
 }
@@ -341,6 +345,7 @@ h3 {
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .section,
@@ -1303,6 +1308,7 @@ h3 {
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .commerce-page {

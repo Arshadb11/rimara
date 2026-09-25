@@ -41,6 +41,10 @@ export default async function HomePage() {
       color: "#b3a469",
       ctx: "Explore Air That Stays",
     },
+    "discovery-set": {
+      color: "#4a4a46",
+      ctx: "Explore Discovery Set",
+    },
   };
 
   const products = (apiResponse?.products?.data || []).map((product) => ({
@@ -57,7 +61,7 @@ export default async function HomePage() {
           ))}
         </div>
         <div className="hero-copy">
-          <Reveal delay={0}><p className="eyebrow">{ apiResponse?.home_sliders?.[0]?.season }</p></Reveal>
+          {/* <Reveal delay={0}><p className="eyebrow">{ apiResponse?.home_sliders?.[0]?.season }</p></Reveal> */}
           <h1><LineReveal delay={0.12}>{ apiResponse?.home_sliders?.[0]?.title }</LineReveal></h1>
           <Reveal delay={0.32}><p className="body-copy">{ apiResponse?.home_sliders?.[0]?.sub_title }</p></Reveal>
           <Reveal delay={0.46}><Link className="text-link" href="/shop/fragrances">View fragrances</Link></Reveal>
@@ -78,21 +82,24 @@ export default async function HomePage() {
           {/* {homeProducts.map((product) => <ProductCard key={product.id} product={product} />)} */}
           {products.map((product) => <ProductCard key={product.product_id} product={product} />)}
         </Stagger>
-      </section>
-
-      <section className="split-story">
-        <div><p className="eyebrow">Concept</p><h2><LineReveal>A Journey That Stays With You</LineReveal></h2></div>
-        <Reveal className="story-copy"><p>Rimara takes its name from the idea of movement and transformation. Not simply travelling from one place to another, but becoming someone new along the way.</p><p>Like the desert itself, every fragrance evolves with time, revealing new layers, new memories and a deeper connection to the person who wears it.</p><Link className="text-link" href="/concept">Begin with Rimara</Link></Reveal>
-      </section>
+      </section>    
 
       <section className="image-text">
         <Image src="/assets/images/desert-landscape.jpg" alt="Desert dunes in shifting light" width={1600} height={980} />
         <Reveal className="image-text__copy">
           <p className="eyebrow">The World of Rimara</p>
-          <h2><LineReveal>Inspired by the Desert</LineReveal></h2>
+          <h2><LineReveal>Inspired by the desert.</LineReveal></h2>
           <p className="body-copy">In the desert, nothing stands still. The wind moves. The sand shifts. The horizon changes with every hour. Yet some things remain: presence, character and memory.</p>
           <Link className="button-secondary" href="/story">Discover the story</Link>
         </Reveal>
+      </section>
+
+      <section className="split-story">
+        <div>
+          {/* <p className="eyebrow">Concept</p> */}
+        <h2><LineReveal>A journey that stays with you.</LineReveal></h2></div>
+        <Reveal className="story-copy"><p>Rimara takes its name from the idea of movement and transformation. Not simply travelling from one place to another, but becoming someone new along the way.</p><p>Like the desert itself, every fragrance evolves with time, revealing new layers, new memories and a deeper connection to the person who wears it.</p>
+        <Link className="text-link" href="/concept">The Concept of Rimara</Link></Reveal>
       </section>
     </main>
   );

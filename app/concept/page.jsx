@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { LineReveal, Reveal } from "@/components/Reveal";
 
 export const metadata = {
@@ -17,7 +18,7 @@ const conceptActs = [
   {
     eyebrow: "Act 02: The World",
     title: "Inspired by desert atmosphere.",
-    copy: "The world of Rimara is shaped by the desert: open air, shifting light, warm stone, dry wind and long shadows. Each fragrance is connected to a time, a mood and a feeling, from deep night to golden hour to the quiet before dawn.",
+    copy: "The world of Rimara is shaped by the desert: open air, shifting light, warm stone, dry wind and long shadows. Each fragrance is connected to a time, a mood and a feeling. From a deep night to the quiet before dawn to the golden hour.",
     image: "/assets/images/concept/section-03.jpg",
     alt: "Rimara concept image inspired by desert atmosphere"
   },
@@ -37,7 +38,7 @@ const conceptActs = [
   },
   {
     eyebrow: "Act 05: The Promise",
-    title: "Own the Air.",
+    title: "Own your air.",
     copy: "Rimara's promise is simple: fragrance should become part of the air around you. From the bottle to the final trace, every detail is designed to support that promise.",
     image: "/assets/images/concept/section-06.jpg",
     alt: "Rimara concept image for Own the Air"
@@ -49,7 +50,7 @@ export default function ConceptPage() {
     <main>
       <section className="page-hero">
         <div>
-          <p className="eyebrow">Concept</p>
+          {/* <p className="eyebrow">Concept</p> */}
           <h1><LineReveal>Air. Memory. Presence. Time.</LineReveal></h1>
         </div>
         <Reveal>
@@ -72,6 +73,7 @@ export default function ConceptPage() {
               <Image src={image} width={1200} height={760} alt={alt} loading="eager" unoptimized />
               <p>{copy}</p>
             </div>
+            <Link className="button-secondary" href="/diagnostic">FIND YOUR AIR</Link>
           </Reveal>
         </section>
       ))}

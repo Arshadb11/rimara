@@ -66,7 +66,7 @@ export default function ProductPurchase({ product }) {
         <button className="button-primary" type="button" onClick={addToBag} aria-live="polite">
           {added ? `${product.product_name} ${size} added` : `Add ${size} · ${formatPrice(priceMap[size] ?? 0)}`}
         </button>
-        <Link className="button-secondary" href="/shop/discovery-pack">Try in Discovery Pack</Link>
+        <Link className="button-secondary" href="/shop/discovery-pack">Try in Discovery Set</Link>
       </div>
     </>
   );

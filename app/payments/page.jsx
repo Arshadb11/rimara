@@ -91,7 +91,7 @@ export default function PaymentsPage() {
 
         {/* ── Page Title ── */}
         <header className="tc-page-header">
-          <p className="tc-kicker">Legal</p>
+          {/* <p className="tc-kicker">Legal</p> */}
           <h1 className="tc-title">Payments</h1>
         </header>
 

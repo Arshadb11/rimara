@@ -27,7 +27,7 @@ const storySections = [
     paragraphs: [
       "Sillage is the invisible trail a fragrance leaves behind. It is the space between you and everyone who remembers you.",
       "For Rimara, sillage is not about being loud. It is about being clear. A scent should move with you, stay close to your character, and leave something honest in the air.",
-      "We create fragrances for that quiet distance, not too much, never too little. Just enough to become part of how you are felt."
+      "We create fragrances for that quiet distance. Not too much. Never too little. Just enough to become part of how you are felt."
     ]
   },
   {
@@ -38,7 +38,7 @@ const storySections = [
     paragraphs: [
       "In the desert, nothing stands still. The wind moves. The sand shifts. The horizon changes with every hour.",
       "Yet some things remain: presence, character and memory. Rimara is built in that space, between movement and stillness, heat and shadow, silence and trace.",
-      "Each fragrance carries a different hour of the day. Deep night. Last light. Open noon. The quiet before dawn. Together, they form a world told through air."
+      "Each fragrance carries a different hour of the day. Deep night. The quiet before dawn. Open noon. Last light. Together, they form a world told through air."
     ]
   },
   {
@@ -60,8 +60,8 @@ export default function StoryPage() {
     <main>
       <section className="page-hero story-hero">
         <div>
-          <p className="eyebrow">Story</p>
-          <h1><LineReveal>The Story the Air Remembers</LineReveal></h1>
+          {/* <p className="eyebrow">Story</p> */}
+          <h1><LineReveal>The story the air remembers.</LineReveal></h1>
         </div>
         <Reveal>
           <p className="body-copy-large">Works well for Rimara because it connects directly to fragrance, memory and sillage.</p>
@@ -86,7 +86,7 @@ export default function StoryPage() {
             <div className="story-copy">
               {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
-            {section.cta ? <Link className="button-secondary" href="/shop/fragrances">Explore the Collection</Link> : null}
+            {section.cta ? <Link className="button-secondary" href="/shop/fragrances">THE CONCEPT OF RIMARA</Link> : null}
           </Reveal>
         </section>
       ))}

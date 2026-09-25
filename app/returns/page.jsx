@@ -57,12 +57,13 @@ export default function ReturnsPage() {
 
         {/* ── Page Title ── */}
         <header className="tc-page-header">
-          <p className="tc-kicker">Legal</p>
           <h1 className="tc-title">Returns, Refunds &amp; Cancellations</h1>
+          
         </header>
 
         {/* ── Preamble / Promise ── */}
         <div className="tc-preamble">
+          <p className="tc-kicker">Our Promise</p>
           <p>
             rimara.ae promises to sell you only 100% genuine products and hopes that you will be
             delighted with your order.
@@ -74,7 +75,9 @@ export default function ReturnsPage() {
           <div key={section.title} className="tc-section">
             <h2 className="tc-section-title">{section.title}</h2>
 
-            {section.content?.map((p, i) => <p key={i}>{p}</p>)}
+            {section.content?.map((p, i) => (
+              <p key={i}>{p === "Returns will ONLY be accepted in the following cases:" ? <strong>{p}</strong> : p}</p>
+            ))}
 
             {section.numbered && (
               <ol className="tc-list tc-list--numbered">
@@ -82,7 +85,9 @@ export default function ReturnsPage() {
               </ol>
             )}
 
-            {section.afterNumbered?.map((p, i) => <p key={`after-${i}`}>{p}</p>)}
+            {section.afterNumbered?.map((p, i) => (
+              <p key={`after-${i}`}>{p === "Returned items MUST be:" ? <strong>{p}</strong> : p}</p>
+            ))}
 
             {section.secondNumbered && (
               <ol className="tc-list tc-list--numbered">
@@ -90,7 +95,9 @@ export default function ReturnsPage() {
               </ol>
             )}
 
-            {section.footer?.map((p, i) => <p key={`footer-${i}`}>{p}</p>)}
+            {section.footer?.map((p, i) => (
+              <p key={`footer-${i}`}>{p === "To process the request, customers MUST provide:" ? <strong>{p}</strong> : p}</p>
+            ))}
 
             {section.thirdNumbered && (
               <ol className="tc-list tc-list--numbered">

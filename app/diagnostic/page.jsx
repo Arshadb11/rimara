@@ -8,7 +8,7 @@ export default function DiagnosticPage() {
     <main>
       <section className="page-hero diagnostic-hero">
         <div>
-          <p className="eyebrow">Find Your Air</p>
+          {/* <p className="eyebrow">Find Your Air</p> */}
           <h1><LineReveal>Begin with a feeling.</LineReveal></h1>
         </div>
         <Reveal>

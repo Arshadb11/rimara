@@ -107,7 +107,7 @@ const productSettings = {
   "wild-air":      { color: "#8ab0c8", ctx: "Explore Wild Air" },
   "last-light":    { color: "#e0a040", ctx: "Explore Last Light" },
   "air-that-stays":{ color: "#b3a469", ctx: "Explore Air That Stays" },
-  "discovery-pack":{ color: "#4a4a46", ctx: "Discover the pack" },
+  "discovery-set":{ color: "#4a4a46", ctx: "Discover the set" },
 };
 
 function slugify(name = "") {
@@ -356,6 +356,7 @@ export default function DiagnosticForm() {
             <label>
               <span>Who is this for?</span>
               <select name="who" value={form.who} onChange={handleChange} required
+                suppressHydrationWarning
                 className={submitted && !form.who ? "select--error" : ""}>
                 <option value="" disabled>Select</option>
                 <option>Him</option>
@@ -366,6 +367,7 @@ export default function DiagnosticForm() {
             <label>
               <span>What is the Feeling?</span>
               <select name="feeling" value={form.feeling} onChange={handleChange} required
+                suppressHydrationWarning
                 className={submitted && !form.feeling ? "select--error" : ""}>
                 <option value="" disabled>Select a feeling</option>
                 <option>Intimate</option>
@@ -382,6 +384,7 @@ export default function DiagnosticForm() {
             <label>
               <span>Which city are you in the mood of travelling?</span>
               <select name="city" value={form.city} onChange={handleChange} required
+                suppressHydrationWarning
                 className={submitted && !form.city ? "select--error" : ""}>
                 <option value="" disabled>Select a city</option>
                 <option>Paris</option>
@@ -397,6 +400,7 @@ export default function DiagnosticForm() {
             <label>
               <span>What is the Event?</span>
               <select name="event" value={form.event} onChange={handleChange} required
+                suppressHydrationWarning
                 className={submitted && !form.event ? "select--error" : ""}>
                 <option value="" disabled>Select an event</option>
                 <option>Date</option>
@@ -413,6 +417,7 @@ export default function DiagnosticForm() {
             <label>
               <span>Texture</span>
               <select name="texture" value={form.texture} onChange={handleChange} required
+                suppressHydrationWarning
                 className={submitted && !form.texture ? "select--error" : ""}>
                 <option value="" disabled>Select texture</option>
                 <option>Clean</option>
@@ -424,6 +429,7 @@ export default function DiagnosticForm() {
             <label>
               <span>Presence</span>
               <select name="presence" value={form.presence} onChange={handleChange} required
+                suppressHydrationWarning
                 className={submitted && !form.presence ? "select--error" : ""}>
                 <option value="" disabled>Select presence</option>
                 <option>Soft &amp; Close</option>

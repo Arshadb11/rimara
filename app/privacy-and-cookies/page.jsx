@@ -119,7 +119,7 @@ export default function PrivacyAndCookiesPage() {
       <div className="tc-container">
         {/* ── Page Title ── */}
         <header className="tc-page-header">
-          <p className="tc-kicker">Legal</p>
+          {/* <p className="tc-kicker">Legal</p> */}
           <h1 className="tc-title">Privacy &amp; Cookies</h1>
         </header>
 
@@ -127,7 +127,7 @@ export default function PrivacyAndCookiesPage() {
         <div className="tc-preamble">
           <p>
             This Privacy and Cookies Policy applies to information collected and processed via the{" "}
-            <a href="https://www.rimara.ae">www.rimara.ae</a> website and mobile application, if
+            <a href="https://www.rimara.ae">www.rimara.ae </a> website and mobile application, if
             available (together, the &ldquo;Site&rdquo;) and associated customer service channels.
             We take your privacy very seriously and therefore want you to know how your data is
             collected, used, shared and stored.
