@@ -8,15 +8,15 @@ import { ease, useReveal } from "./Reveal";
 const columns = [
   {
     title: "Shop",
-    links: [["All Fragrances", "/shop/fragrances"], ["Discovery Pack", "/shop/discovery-pack"], ["Best Sellers", "/shop/fragrances"], ["Gift Cards", "/contact"]]
+    links: [["All Fragrances", "/shop/fragrances"], ["100ml", "/shop/fragrances"], ["Travel Sizes", "/shop/discovery-pack"], ["Discovery Sets", "/shop/discovery-pack"]]
   },
   {
     title: "Explore",
-    links: [["Concept", "/concept"], ["Story", "/story"], /* ["Perfumers", "/perfumers"], */ ["FAQs", "/contact"], ["Sillage", "/"]]
+    links: [["Our Story", "/story"], ["Brand Concept", "/concept"], /* ["Perfumers", "/perfumers"], */ ["What's Your Air?", "/diagnostic"]]
   },
   {
     title: "Support",
-    links: [["Terms & Conditions", "/terms-and-conditions"], ["Privacy Policy", "/privacy-and-cookies"], ["Payments", "/payments"], ["Safe & Secure Delivery", "/delivery"], ["Returns, Refunds & Cancellations", "/returns"], ["Liability & Disclaimers", "/liability"], ["Contact", "/contact"]]
+    links: [["Terms & Conditions", "/terms-and-conditions"], ["Privacy & Cookies", "/privacy-and-cookies"], ["Payments", "/payments"], ["Safe & Secure Delivery", "/delivery"], ["Returns, Refunds & Cancellations", "/returns"], ["Limitation of Liability & Disclaimers", "/liability"], ["Contact Us", "/contact"]]
   }
 ];
 
@@ -40,10 +40,12 @@ export default function Footer() {
       <div className="footer-grid">
         <motion.div {...rise(0.1)}>
           <Link className="footer-logo" href="/">
-            <Image src="/assets/images/sillage-logo.svg" alt="Sillage logo" width={220} height={80} />
+            <Image src="/assets/images/rimara-logo.jpg" alt="Rimara logo" width={220} height={80} />
           </Link>
-          <p>Crafting the Air Around You.</p>
-          <p className="small-copy muted">Rimara is a fragrance brand by Sillage.</p>
+          <p>A fine-fragrance brand from the house of </p>
+          <Link className="" href="/">
+            <Image src="/assets/images/sillage-logo.jpg" alt="Sillage logo" width={80} height={35} />
+          </Link>
         </motion.div>
         {columns.map((column, index) => (
           <motion.div key={column.title} {...rise(0.2 + index * 0.1)}>
@@ -64,15 +66,14 @@ export default function Footer() {
       </div>
       <motion.section className="site-disclaimer" aria-label="Disclaimer" {...rise(0.72)}>
         <h2>Disclaimer</h2>
-        <p>This website has been crafted as a digital expression of Rimara’s fragrance world. The words, visuals, colours, moods, timings and scent descriptions used across the site are intended to guide discovery and express the emotional character of each fragrance.</p>
+        <p>This website has been crafted as a digital expression of Rimara's fragrance world. The words, visuals, colours, moods, timings and scent descriptions used across the site are intended to guide discovery and express the emotional character of each fragrance.</p>
         <p>Every fragrance lives differently on every person. Skin, temperature, climate, application and time all influence how a scent opens, settles and stays. The notes and stories shared here are creative and sensory references, not guaranteed results.</p>
         <p>Product visuals, bottle tones, packaging details and colours may appear slightly different from the physical product due to photography, lighting, screen calibration, materials and production finish. Rimara aims to present every fragrance with care and accuracy, while allowing for natural variation.</p>
-        <p>All brand names, product names, imagery, copy, design systems, layouts and creative expressions on this website are the property of Rimara and/or Sillage, unless otherwise credited. They may not be copied, reproduced, altered or used commercially without written permission.</p>
+        <p>All brand names, product names, imagery, copy, design systems, layouts and creative expressions on this website are the property of rimara PARFUMS and/or Sillage FZCO, unless otherwise credited. They may not be copied, reproduced, altered or used commercially without written permission.</p>
         <p>Product information, availability, pricing, ingredients, packaging and offers may change without prior notice. Please refer to the product packaging and official purchase details for the most current information.</p>
         <p>Rimara is made to be experienced slowly. Try it on skin. Let it move with you. Let the air decide.</p>
-        <p>Designed by COMDEZ UK</p>
       </motion.section>
-      <motion.div className="copyright" {...rise(0.82)}><span>© Rimara / Sillage. All rights reserved.</span><span>UAE / AED</span></motion.div>
+      <motion.div className="copyright" {...rise(0.82)}><span>© rimara PARFUMS / Sillage FZCO. All rights reserved.</span><span>UAE / AED</span></motion.div>
     </footer>
   );
 }

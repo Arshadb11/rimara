@@ -7,12 +7,12 @@ import { useCart } from "@/components/CartProvider";
 
 const nav = [
   ["Home", "/"],
+  ["Our Story", "/story"],
+  ["Brand Concept", "/concept"],
+  ["What's Your Air", "/diagnostic"],
   ["Shop", "/shop/fragrances"],
-  ["Concept", "/concept"],
-  ["Diagnostic", "/diagnostic"],
-  ["Story", "/story"],
   // ["Perfumers", "/perfumers"],
-  ["Contact", "/contact"]
+  // ["Contact", "/contact"]
 ];
 
 function Icon({ type }) {
@@ -26,7 +26,7 @@ export default function Header({ topHeader }) {
   const { count } = useCart();
   return (
     <header className="site-header">
-      <div className="announcement">{ topHeader ? topHeader[0].title : 'Rimara Fine Fragrance - Own the Air' }</div>
+      {/* <div className="announcement">{ topHeader ? topHeader[0].title : 'Rimara Fine Fragrance - Own the Air' }</div> */}
       <nav className="nav-shell" aria-label="Primary navigation">
         <button className="mobile-menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? "Close" : "Menu"}</button>
         <Link className="brand-logo" href="/" aria-label="Rimara home">

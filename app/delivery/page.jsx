@@ -38,7 +38,7 @@ export default function DeliveryPage() {
 
         {/* ── Page Title ── */}
         <header className="tc-page-header">
-          <p className="tc-kicker">Shipping</p>
+          {/* <p className="tc-kicker">Shipping</p> */}
           <h1 className="tc-title">Safe &amp; Secure Delivery</h1>
         </header>
 

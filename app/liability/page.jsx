@@ -56,7 +56,7 @@ export default function LiabilityPage() {
 
         {/* ── Page Title ── */}
         <header className="tc-page-header">
-          <p className="tc-kicker">Legal</p>
+          {/* <p className="tc-kicker">Legal</p> */}
           <h1 className="tc-title">Limitation of Liability &amp; Disclaimers</h1>
         </header>
 

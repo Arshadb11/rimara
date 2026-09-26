@@ -59,7 +59,7 @@ export default function TermsAndConditionsPage() {
       <div className="tc-container">
         {/* ── Page Title ── */}
         <header className="tc-page-header">
-          <p className="tc-kicker">Legal</p>
+          {/* <p className="tc-kicker">Legal</p> */}
           <h1 className="tc-title">Terms &amp; Conditions</h1>
         </header>
 

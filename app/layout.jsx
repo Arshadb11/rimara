@@ -1,4 +1,4 @@
-﻿import "./globals.css";
+import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MotionProvider from "@/components/MotionProvider";
@@ -7,7 +7,7 @@ import { CatalogProvider } from "@/components/CatalogContext";
 
 export const metadata = {
   title: {
-    default: "Rimara | Own the Air",
+    default: "Rimara | Own your Air",
     template: "%s | Rimara"
   },
   description: "Fine fragrance shaped by air, time and memory.",
@@ -78,7 +78,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body>
+      <body suppressHydrationWarning>
         <CatalogProvider
           categories={categories}
           shippingCharges={shippingCharges}

@@ -71,6 +71,10 @@ export default async function ProductPage({ params }) {
       color: "#b3a469",
       ctx: "Explore Air That Stays",
     },
+    "discovery-set": {
+      color: "#4a4a46",
+      ctx: "Discover the set",
+    },
   };
 
   const productKey = (name) =>
@@ -151,7 +155,7 @@ export default async function ProductPage({ params }) {
         <Reveal>{product.content.replace(/<\/?p>/g, '')}</Reveal>
       </section>
       <section className="catalog-feature catalog-feature--stacked">
-        <div><p className="eyebrow">Key Notes</p><h2><LineReveal>Four materials. One atmosphere.</LineReveal></h2></div>
+        <div><p className="eyebrow">Key Notes</p><h2><LineReveal>Three materials. One atmosphere.</LineReveal></h2></div>
         <div className="note-grid">
           <article key={product.product_name} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.top_note}</p><div dangerouslySetInnerHTML={{ __html: product.top_note_description}}/></article>
           <article key={`${product.product_name}2`} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.heart_note}</p><div dangerouslySetInnerHTML={{ __html: product.heart_note_description}}/></article>
@@ -168,11 +172,11 @@ export default async function ProductPage({ params }) {
         <details><summary>Product details and compliance</summary><p>{product.additional_details}</p></details>
       </section>
       <ProductReviews product={product} />
-      <section className="catalog-feature">
+      {/* <section className="catalog-feature">
         <div><p className="eyebrow">Discovery Pack</p><h2><LineReveal>Start with all four. Let one stay.</LineReveal></h2></div>
         <Reveal><p>Fragrance should never be chosen in a hurry. It needs skin, time and air.</p><p>The Rimara Discovery Pack brings together four 10 ml fragrances: Air That Stays, Last Light, Wild Air and Quiet Blossom. Wear each one across a different hour, mood and day.</p><Link className="button-secondary" href="/shop/discovery-pack">Explore Discovery Pack</Link></Reveal>
-      </section>
-      <Stagger className="product-grid">{product.related_prods.map((item) => <ProductCard key={item.product_id} product={item} />)}</Stagger>
+      </section> */}
+      {/* <Stagger className="product-grid">{product.related_prods.map((item) => <ProductCard key={item.product_id} product={item} />)}</Stagger> */}
     </main>
   );
 }
