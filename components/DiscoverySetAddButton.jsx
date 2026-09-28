@@ -6,18 +6,18 @@ import { useCart } from "@/components/CartProvider";
 
 const PRICE = 160;
 
-export default function DiscoverySetAddButton() {
+export default function DiscoverySetAddButton({ price, product_id }) {
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
 
   function handleAdd() {
     addItem({
-      id: "discovery-pack",
+      id: product_id,
       name: "Discovery Set",
       image: "/assets/images/catalog/discovery-pack.png",
       size: "4 × 10 ml",
-      price: PRICE,
-      product_id: "discovery-pack",
+      price: price || PRICE,
+      product_id: product_id,
       product_name: "Discovery Set",
       product_name_ar: null,
       images: JSON.stringify(["catalog/discovery-pack.png"]),
@@ -42,7 +42,7 @@ export default function DiscoverySetAddButton() {
         aria-live="polite"
         style={{ width: "fit-content" }}
       >
-        {added ? "Discovery Set added" : `Add Discovery Set · AED ${PRICE}`}
+        {added ? "Discovery Set added" : `Add Discovery Set · AED ${price || PRICE}`}
       </button>
       <Link className="button-secondary" href="/shop/fragrances">
         View Fragrances

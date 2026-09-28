@@ -142,34 +142,35 @@ export default async function ProductPage({ params }) {
           </div>
         </div>
         <Reveal className="product-buy">
-          <p className="product-meta">{product.occasion}</p>
+          <div className="product-meta" dangerouslySetInnerHTML={{ __html: product.occasion }}></div>
           <h1><LineReveal>{product.product_name}</LineReveal></h1>
-          <p className="product-accord">{product.item_profile}<br />{product.fragrance_type}</p>
-          <p className="body-copy">{product.item_classification}</p>
-          <p>{product.description.replace(/<\/?p>/g, '')}</p>
+          <div className="product-accord" dangerouslySetInnerHTML={{ __html: product.item_profile }}></div>
+          <div>{product.fragrance_type}</div>
+          <div className="body-copy" dangerouslySetInnerHTML={{ __html: product.item_classification }}></div>
+          <div dangerouslySetInnerHTML={{ __html: product.description }}></div>
           <ProductPurchase product={product} />
         </Reveal>
       </section>
       <section className="catalog-feature">
         <div><p className="eyebrow">Product Story</p><h2><LineReveal>Made to live in the air after you leave.</LineReveal></h2></div>
-        <Reveal>{product.content.replace(/<\/?p>/g, '')}</Reveal>
+        <Reveal><div dangerouslySetInnerHTML={{ __html: product.content }}></div></Reveal>
       </section>
       <section className="catalog-feature catalog-feature--stacked">
-        <div><p className="eyebrow">Key Notes</p><h2><LineReveal>Three materials. One atmosphere.</LineReveal></h2></div>
+        <div><p className="eyebrow">Key Notes</p><h2><LineReveal>{product.itemFamily}</LineReveal></h2></div>
         <div className="note-grid">
-          <article key={product.product_name} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.top_note}</p><div dangerouslySetInnerHTML={{ __html: product.top_note_description}}/></article>
-          <article key={`${product.product_name}2`} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.heart_note}</p><div dangerouslySetInnerHTML={{ __html: product.heart_note_description}}/></article>
-          <article key={`${product.product_name}3`} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.base_note}</p><div dangerouslySetInnerHTML={{ __html: product.base_note_description}}/></article>
+          <article key={product.product_name} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.top_note}</p><div dangerouslySetInnerHTML={{ __html: product.top_note_description }} /></article>
+          <article key={`${product.product_name}2`} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.heart_note}</p><div dangerouslySetInnerHTML={{ __html: product.heart_note_description }} /></article>
+          <article key={`${product.product_name}3`} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.base_note}</p><div dangerouslySetInnerHTML={{ __html: product.base_note_description }} /></article>
         </div>
       </section>
       <section className="catalog-feature">
-        <div><p className="eyebrow">How it feels</p><h2><LineReveal>{product.longevity}</LineReveal></h2></div>
-        <Reveal><p className="eyebrow">When to wear</p><p>{product.how_to_use}</p></Reveal>
+        <div><p className="eyebrow">How it feels</p><h2 dangerouslySetInnerHTML={{ __html: product.longevity }}></h2></div>
+        <Reveal><p className="eyebrow">When to wear</p><div dangerouslySetInnerHTML={{ __html: product.how_to_use }}></div></Reveal>
       </section>
       <section className="product-accordions">
-        <details><summary>Ingredients</summary><p>{product.ingredients}</p></details>
+        <details><summary>Ingredients</summary><div dangerouslySetInnerHTML={{ __html: product.ingredients }}></div></details>
         <details><summary>Safety information</summary><p>FLAMMABLE. Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. For external use only. Avoid contact with eyes. Keep out of reach of children. Discontinue use if irritation occurs.</p></details>
-        <details><summary>Product details and compliance</summary><p>{product.additional_details}</p></details>
+        <details><summary>Product details and compliance</summary><div dangerouslySetInnerHTML={{ __html: product.additional_details }}></div></details>
       </section>
       <ProductReviews product={product} />
       {/* <section className="catalog-feature">
