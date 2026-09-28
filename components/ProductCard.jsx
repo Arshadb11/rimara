@@ -63,9 +63,9 @@ export default function ProductCard({ product }) {
             animate={visible ? { opacity: 1, scaleX: 1 } : { opacity: 0, scaleX: 0 }}
             transition={{ duration: 0.72, ease, delay: 0.08 }}
           />
-          <motion.p className="product-meta" {...item(0.16)}>{product.occasion}</motion.p>
+          <motion.p className="product-meta" {...item(0.16)}>{product.occasion?.replace(/<\/?[^>]+(>|$)/g, '').trim()}</motion.p>
           <motion.h2 {...item(0.28)}>{product.product_name}</motion.h2>
-          <motion.p {...item(0.4)}>{product.item_classification}</motion.p>
+          <motion.p {...item(0.4)}>{product.item_classification?.replace(/<\/?[^>]+(>|$)/g, '').trim()}</motion.p>
           <motion.p className="product-card__copy" {...item(0.52)}>{product.description.replace(/<\/?p>/g, '')}</motion.p>
           <motion.span className="product-card__cta" {...item(0.64)}>{product.ctx}</motion.span>
         </div>

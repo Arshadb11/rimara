@@ -12,8 +12,9 @@ export default function ProductPurchase({ product }) {
   );
 
   // Default to first variation (not a hardcoded size)
-  const [size, setSize] = useState(() => product.variations?.[0]?.name ?? "");
-  const [productId, setProductId] = useState(() => product.variations?.[0]?.id ?? "");
+  const defaultVariation = (product.variations || []).find(v => v.name?.includes("100")) ?? product.variations?.[0];
+  const [size, setSize] = useState(() => defaultVariation?.name ?? "");
+  const [productId, setProductId] = useState(() => defaultVariation?.id ?? "");
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
 
@@ -63,7 +64,7 @@ export default function ProductPurchase({ product }) {
         </div>
       </fieldset>
       <div className="product-actions">
-        <button className="button-primary" type="button" onClick={addToBag} aria-live="polite">
+        <button id="product-atc-btn" className="button-primary" type="button" onClick={addToBag} aria-live="polite">
           {added ? `${product.product_name} ${size} added` : `Add ${size} · ${formatPrice(priceMap[size] ?? 0)}`}
         </button>
         <Link className="button-secondary" href="/shop/discovery-pack">Try in Discovery Set</Link>

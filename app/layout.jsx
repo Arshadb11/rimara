@@ -7,7 +7,7 @@ import { CatalogProvider } from "@/components/CatalogContext";
 
 export const metadata = {
   title: {
-    default: "Rimara | Own your Air",
+    default: "Rimara | Own Your Air",
     template: "%s | Rimara"
   },
   description: "Fine fragrance shaped by air, time and memory.",

@@ -41,7 +41,8 @@ const conceptActs = [
     title: "Own your air.",
     copy: "Rimara's promise is simple: fragrance should become part of the air around you. From the bottle to the final trace, every detail is designed to support that promise.",
     image: "/assets/images/concept/section-06.jpg",
-    alt: "Rimara concept image for Own the Air"
+    alt: "Rimara concept image for Own the Air",
+    cta: true
   }
 ];
 
@@ -62,7 +63,7 @@ export default function ConceptPage() {
         </Reveal>
       </section>
 
-      {conceptActs.map(({ eyebrow, title, copy, image, alt }) => (
+      {conceptActs.map(({ eyebrow, title, copy, image, alt, cta }) => (
         <section className="catalog-feature" key={eyebrow}>
           <div>
             <p className="eyebrow">{eyebrow}</p>
@@ -73,7 +74,7 @@ export default function ConceptPage() {
               <Image src={image} width={1200} height={760} alt={alt} loading="eager" unoptimized />
               <p>{copy}</p>
             </div>
-            <Link className="button-secondary" href="/diagnostic">FIND YOUR AIR</Link>
+            {cta && <Link className="button-secondary" href="/diagnostic">FIND YOUR AIR</Link>}
           </Reveal>
         </section>
       ))}

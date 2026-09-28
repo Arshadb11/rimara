@@ -515,17 +515,17 @@ export default function CheckoutPage() {
               <legend className="sr-only">Choose payment method</legend>
               <div className="size-selector__options">
 
-                {/* <label className={"size-selector__label" + (payMethod === "cod" ? " is-selected" : "")}
+                <label className={"size-selector__label" + (payMethod === "cod" ? " is-selected" : "")}
                   style={{ minWidth: 0, padding: "16px 20px", flexDirection: "column", alignItems: "flex-start", gap: 4, cursor: "pointer" }}>
                   <input type="radio" name="paymentMethod" value="cod"
                     checked={payMethod === "cod"} onChange={() => setPayMethod("cod")}
                     disabled={isLoading} style={{ position: "absolute", width: 1, height: 1, opacity: 0 }} />
                   <span style={{ font: "11px var(--font-label)", letterSpacing: ".08em", textTransform: "uppercase" }}>Cash on Delivery</span>
                   <span style={{ font: "10px var(--font-body)", opacity: 0.65 }}>Collected at delivery</span>
-                  {codFeeNum > 0 && (
+                  {/* {codFeeNum > 0 && (
                     <span style={{ font: "11px var(--font-body)", opacity: 0.65 }}>+{formatPrice(codFeeNum)} fee</span>
-                  )}
-                </label> */}
+                  )} */}
+                </label>
 
                 <label className={"size-selector__label" + (payMethod === "card" ? " is-selected" : "")}
                   style={{ minWidth: 0, padding: "16px 20px", flexDirection: "column", alignItems: "flex-start", gap: 4, cursor: "pointer" }}>
@@ -533,6 +533,7 @@ export default function CheckoutPage() {
                     checked={payMethod === "card"} onChange={() => setPayMethod("card")}
                     disabled={isLoading} style={{ position: "absolute", width: 1, height: 1, opacity: 0 }} />
                   <span style={{ font: "11px var(--font-label)", letterSpacing: ".08em", textTransform: "uppercase" }}>Credit / Debit Card</span>
+                  <span style={{ font: "10px var(--font-body)", opacity: 0.65 }}>Visa / Mastercard / Apple Pay</span>
                 </label>
 
               </div>
@@ -599,7 +600,7 @@ export default function CheckoutPage() {
             <div><span>Service fee</span><strong>{formatPrice(serviceFeeNum)}</strong></div>
           )}
           {codPrice > 0 && (
-            <div><span>COD fee</span><strong>{formatPrice(codPrice)}</strong></div>
+            <div><span>COD fee (Non-Refundable)</span><strong>{formatPrice(codPrice)}</strong></div>
           )}
           <div className="order-total"><span>Total</span><strong>{formatPrice(grandTotal)}</strong></div>
         </aside>

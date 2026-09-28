@@ -5,6 +5,7 @@ import { products } from "@/lib/products";
 import ProductPurchase from "@/components/ProductPurchase";
 import ProductCard from "@/components/ProductCard";
 import ProductReviews from "@/components/ProductReviews";
+import StickyCart from "@/components/StickyCart";
 import { LineReveal, Reveal, Stagger } from "@/components/Reveal";
 
 // export function generateStaticParams() {
@@ -154,12 +155,33 @@ export default async function ProductPage({ params }) {
         <div><p className="eyebrow">Product Story</p><h2><LineReveal>Made to live in the air after you leave.</LineReveal></h2></div>
         <Reveal>{product.content.replace(/<\/?p>/g, '')}</Reveal>
       </section>
-      <section className="catalog-feature catalog-feature--stacked">
-        <div><p className="eyebrow">Key Notes</p><h2><LineReveal>Three materials. One atmosphere.</LineReveal></h2></div>
-        <div className="note-grid">
-          <article key={product.product_name} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.top_note}</p><div dangerouslySetInnerHTML={{ __html: product.top_note_description}}/></article>
-          <article key={`${product.product_name}2`} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.heart_note}</p><div dangerouslySetInnerHTML={{ __html: product.heart_note_description}}/></article>
-          <article key={`${product.product_name}3`} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.base_note}</p><div dangerouslySetInnerHTML={{ __html: product.base_note_description}}/></article>
+      <section className="notes-section">
+        <div className="notes-section__heading">
+          <p className="eyebrow">Key Notes</p>
+          <h2><LineReveal>Three materials. One atmosphere.</LineReveal></h2>
+        </div>
+        <div className="note-grid note-grid--three">
+          <article style={{ "--note-color": product.color }}>
+            {product.top_note_image
+              ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.top_note_image}`} alt={product.top_note || "Top note"} width={800} height={600} unoptimized />
+              : <div className="note-image" />}
+            <p className="eyebrow">{product.top_note}</p>
+            <div dangerouslySetInnerHTML={{ __html: product.top_note_description}} />
+          </article>
+          <article style={{ "--note-color": product.color }}>
+            {product.heart_note_image
+              ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.heart_note_image}`} alt={product.heart_note || "Heart note"} width={800} height={600} unoptimized />
+              : <div className="note-image" />}
+            <p className="eyebrow">{product.heart_note}</p>
+            <div dangerouslySetInnerHTML={{ __html: product.heart_note_description}} />
+          </article>
+          <article style={{ "--note-color": product.color }}>
+            {product.base_note_image
+              ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.base_note_image}`} alt={product.base_note || "Base note"} width={800} height={600} unoptimized />
+              : <div className="note-image" />}
+            <p className="eyebrow">{product.base_note}</p>
+            <div dangerouslySetInnerHTML={{ __html: product.base_note_description}} />
+          </article>
         </div>
       </section>
       <section className="catalog-feature">
@@ -177,6 +199,7 @@ export default async function ProductPage({ params }) {
         <Reveal><p>Fragrance should never be chosen in a hurry. It needs skin, time and air.</p><p>The Rimara Discovery Pack brings together four 10 ml fragrances: Air That Stays, Last Light, Wild Air and Quiet Blossom. Wear each one across a different hour, mood and day.</p><Link className="button-secondary" href="/shop/discovery-pack">Explore Discovery Pack</Link></Reveal>
       </section> */}
       {/* <Stagger className="product-grid">{product.related_prods.map((item) => <ProductCard key={item.product_id} product={item} />)}</Stagger> */}
+      <StickyCart product={product} />
     </main>
   );
 }

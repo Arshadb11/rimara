@@ -64,7 +64,7 @@ export default function StoryPage() {
           <h1><LineReveal>The story the air remembers.</LineReveal></h1>
         </div>
         <Reveal>
-          <p className="body-copy-large">Works well for Rimara because it connects directly to fragrance, memory and sillage.</p>
+          <p className="body-copy-large">Born from the moments we remember. Made for the moments we leave behind. <br /><br /> At Rimara, fragrance meets memory, and every sillage tells your story.”</p>
         </Reveal>
       </section>
 
@@ -86,7 +86,7 @@ export default function StoryPage() {
             <div className="story-copy">
               {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
-            {section.cta ? <Link className="button-secondary" href="/shop/fragrances">THE CONCEPT OF RIMARA</Link> : null}
+            {section.cta ? <Link className="button-secondary" href="/concept">THE CONCEPT OF RIMARA</Link> : null}
           </Reveal>
         </section>
       ))}

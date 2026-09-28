@@ -127,13 +127,14 @@ export default function SearchClient() {
             <h2>Our collection.</h2>
           </div> */}
           <div>
-            <p className="eyebrow" style={{ marginBottom: "20px" }}>QUICK LINKS</p>
+            <p className="eyebrow" style={{ marginBottom: "20px", fontWeight: "600" }}>QUICK LINKS:</p>
             <nav style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {[
+                ["Air That Stays", "/shop/fragrances/air-that-stays"],
+                ["Last Light", "/shop/fragrances/last-light"],
                 ["Quiet Blossom", "/shop/fragrances/quiet-blossom"],
                 ["Wild Air", "/shop/fragrances/wild-air"],
-                ["Last Light", "/shop/fragrances/last-light"],
-                ["Air That Stays", "/shop/fragrances/air-that-stays"],
+                ["Discovery Sets", "/shop/discovery-pack"],
               ].map(([label, href]) => (
                 <Link key={label} className="nav-link" href={href}>{label} →</Link>
               ))}

@@ -36,6 +36,7 @@ const sections = [
     numbered: [
       { text: "Credit and Debit Cards (Visa, MasterCard, and national card schemes such as Jaywan)" },
       { text: "Apple Pay and Google Pay, where available" },
+      { text: "Cash on Delivery" },
       { text: "Local digital wallets, where available" },
     ],
   },
