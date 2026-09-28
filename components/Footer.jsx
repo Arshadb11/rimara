@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { motion } from "motion/react";
 import { ease, useReveal } from "./Reveal";
 
@@ -22,11 +23,65 @@ const columns = [
 
 export default function Footer() {
   const [ref, visible] = useReveal();
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+
   const rise = (delay = 0) => ({
     initial: { opacity: 0, y: 18 },
     animate: visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
     transition: { duration: 0.78, ease, delay }
   });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setIsError(false);
+
+    const emailTrimmed = email.trim();
+    if (!emailTrimmed) {
+      setIsError(true);
+      setMessage("Please enter your email address.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailTrimmed)) {
+      setIsError(true);
+      setMessage("Please enter a valid email address.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/newsletter`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ email: emailTrimmed })
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data?.status !== "error") {
+        setIsError(false);
+        setMessage(data?.message || "Thank you for subscribing. We'll stay in touch!");
+        setEmail("");
+      } else {
+        setIsError(true);
+        setMessage(data?.message || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      setIsError(true);
+      setMessage("Unable to subscribe right now. Please check your connection.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <footer ref={ref} className="site-footer">
@@ -58,10 +113,34 @@ export default function Footer() {
         <motion.div {...rise(0.62)}>
           <h2 className="footer-heading">Newsletter</h2>
           <p>A quiet note, once in a while.</p>
-          <form className="newsletter-form">
-            <input aria-label="Email address" type="email" placeholder="Email" />
-            <button type="button" aria-label="Submit newsletter">→</button>
+          <form className="newsletter-form" onSubmit={handleSubmit}>
+            <input
+              aria-label="Email address"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (message) setMessage("");
+              }}
+              disabled={isLoading}
+            />
+            <button type="submit" aria-label="Submit newsletter" disabled={isLoading}>
+              {isLoading ? "..." : "→"}
+            </button>
           </form>
+          {message && (
+            <p
+              className={`newsletter-message ${isError ? "error" : "success"}`}
+              style={{
+                fontSize: "12px",
+                marginTop: "8px",
+                color: isError ? "#c53030" : "#2f855a"
+              }}
+            >
+              {message}
+            </p>
+          )}
         </motion.div>
       </div>
       <motion.section className="site-disclaimer" aria-label="Disclaimer" {...rise(0.72)}>

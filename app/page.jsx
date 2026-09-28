@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { homeProducts } from "@/lib/products";
+// import { homeProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import { HairlineDraw, LineReveal, Reveal, Stagger } from "@/components/Reveal";
 

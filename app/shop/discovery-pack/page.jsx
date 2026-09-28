@@ -55,15 +55,46 @@ export default async function DiscoveryPackPage() {
     ...(productSettings[product.product_name.toLowerCase().trim().replace(/\s+/g, '-')] || {}),
   }));
 
+  async function getProduct() {
+    // console.log('Slug =================================================================================',slug);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/products`,
+      // "http://localhost/rimara-admin/public/api/products",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "http://localhost:3000",
+        },
+        body: JSON.stringify({
+          product: 'Discovery Set'.replace(/-/g, " "),
+        }),
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const apiResponse = await response.json();
+
+    // console.log('Response =================================================================================', apiResponse);
+
+    return apiResponse || null;
+  }
+
+  const product = await getProduct("quiet-blossom");
+
   return (
     <main>
       <section className="catalog-hero">
         <div><h1><LineReveal>Start with all four. Let one stay.</LineReveal></h1></div>
-        <Reveal><p className="body-copy muted">Fragrance should not be chosen in a hurry. It needs skin, time and air. Four 10 ml fragrances help you find the one that belongs to your air.</p></Reveal>
+        <Reveal><div className="body-copy muted" dangerouslySetInnerHTML={{ __html: product.description }}></div></Reveal>
       </section>
       <section className="image-text">
-        <Image src={discoveryPack.image} alt={discoveryPack.alt} width={1086} height={1448} />
-        <Reveal className="image-text__copy"><p className="eyebrow">{discoveryPack.mood}</p><h2><LineReveal>{discoveryPack.name}</LineReveal></h2><p className="body-copy">{discoveryPack.copy}</p><DiscoverySetAddButton /></Reveal>
+        <Image src={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} width={1086} height={1448} />
+        <Reveal className="image-text__copy"><p className="eyebrow">{product.occasion}</p><h2><LineReveal>{product.product_name}</LineReveal></h2><div className="body-copy" dangerouslySetInnerHTML={{ __html: product.content }}></div><DiscoverySetAddButton price={product.price} product_id={product.product_id}/></Reveal>
       </section>
       <Stagger className="product-grid">{products.map((product) => <ProductCard key={product.product_id} product={product} />)}</Stagger>
     </main>

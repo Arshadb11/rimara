@@ -66,7 +66,7 @@ function discountLabel(discount) {
 // ── Build products payload ────────────────────────────────────────────────────
 function buildProducts(items) {
   return items.map((item) => ({
-    price:                  effectivePrice(item.price, item.discount).toFixed(2),
+    price:                  effectivePrice(item.price, item.discount),
     product_id:             item.product_id,
     product_name:           item.name,
     product_name_ar:        null,
