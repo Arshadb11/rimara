@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const ease = [0.22, 1, 0.36, 1];
 
-export function useReveal(amount = 0.2) {
+export function useReveal(amount = 0.2, rootMargin = "0px") {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -26,11 +26,11 @@ export function useReveal(amount = 0.2) {
       if (!entry.isIntersecting) return;
       setVisible(true);
       observer.disconnect();
-    }, { threshold: amount });
+    }, { threshold: amount, rootMargin });
 
     observer.observe(element);
     return () => observer.disconnect();
-  }, [amount, visible]);
+  }, [amount, rootMargin, visible]);
 
   return [ref, visible];
 }

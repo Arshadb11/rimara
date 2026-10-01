@@ -9,7 +9,7 @@ import { ease, useReveal } from "./Reveal";
 const columns = [
   {
     title: "Shop",
-    links: [["All Fragrances", "/shop/fragrances"], ["100ml", "/shop/fragrances"], ["Travel Sizes", "/shop/discovery-pack"], ["Discovery Sets", "/shop/discovery-pack"]]
+    links: [["All Fragrances", "/shop/fragrances"], ["Air That Stays", "/shop/fragrances/air-that-stays"], ["Last Light", "/shop/fragrances/last-light"], ["Quiet Blossom", "/shop/fragrances/quiet-blossom"], ["Wild Air", "/shop/fragrances/wild-air"], ["Discovery Sets", "/shop/fragrances/discovery-set"]]
   },
   {
     title: "Explore",
@@ -95,12 +95,20 @@ export default function Footer() {
       <div className="footer-grid">
         <motion.div {...rise(0.1)}>
           <Link className="footer-logo" href="/">
-            <Image src="/assets/images/rimara-logo.jpg" alt="Rimara logo" width={220} height={80} />
+            <Image src="/assets/images/rimara.svg" alt="Rimara logo" width={180} height={80} />
           </Link>
-          <p>A fine-fragrance brand from the house of </p>
-          <Link className="" href="/">
-            <Image src="/assets/images/sillage-logo.jpg" alt="Sillage logo" width={80} height={35} />
-          </Link>
+          <p className="footer-brand-line">
+            A fine-fragrance brand from the house of{" "}
+            <Link href="/" className="footer-sillage-link">
+              <Image
+                src="/assets/images/sillage-logo.jpg"
+                alt="Sillage"
+                width={80}
+                height={35}
+                className="footer-sillage-logo"
+              />
+            </Link>
+          </p>
         </motion.div>
         {columns.map((column, index) => (
           <motion.div key={column.title} {...rise(0.2 + index * 0.1)}>
@@ -156,3 +164,4 @@ export default function Footer() {
     </footer>
   );
 }
+

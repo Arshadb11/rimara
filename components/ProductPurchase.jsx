@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { formatPrice } from "@/lib/commerce";
 
-export default function ProductPurchase({ product }) {
+export default function ProductPurchase({ product, isDiscoverySet = false }) {
   // Build price map dynamically from whatever variations the API returns
   const priceMap = Object.fromEntries(
     (product.variations || []).map((v) => [v.name, parseFloat(v.price)])
@@ -44,30 +44,39 @@ export default function ProductPurchase({ product }) {
     window.setTimeout(() => setAdded(false), 1800);
   }
 
+  const dsPrice = parseFloat(product.price ?? 0);
+
   return (
     <>
-      <fieldset className="size-selector">
-        <legend>Choose size</legend>
-        <div className="size-selector__options">
-          {product.variations.map((option) => (
-            <label key={option.name} className={size === option.name ? "is-selected" : ""}>
-              <input
-                type="radio"
-                name={`fragrance-size-${option.id}`}
-                value={option.name}
-                checked={size === option.name}
-                onChange={() => { setSize(option.name); setProductId(option.id); setAdded(false); }}
-              />
-              <span>{option.name}</span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
+      {!isDiscoverySet && (
+        <fieldset className="size-selector">
+          <legend>Choose size</legend>
+          <div className="size-selector__options">
+            {product.variations.map((option) => (
+              <label key={option.name} className={size === option.name ? "is-selected" : ""}>
+                <input
+                  type="radio"
+                  name={`fragrance-size-${option.id}`}
+                  value={option.name}
+                  checked={size === option.name}
+                  onChange={() => { setSize(option.name); setProductId(option.id); setAdded(false); }}
+                />
+                <span>{option.name}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
       <div className="product-actions">
         <button id="product-atc-btn" className="button-primary" type="button" onClick={addToBag} aria-live="polite">
-          {added ? `${product.product_name} ${size} added` : `Add ${size} · ${formatPrice(priceMap[size] ?? 0)}`}
+          {isDiscoverySet
+            ? (added ? "Added to bag" : `ADD DISCOVERY SET — AED ${dsPrice % 1 === 0 ? dsPrice.toFixed(0) : dsPrice.toFixed(2)}`)
+            : (added ? `${product.product_name} ${size} added` : `Add ${size} · ${formatPrice(priceMap[size] ?? 0)}`)}
         </button>
-        <Link className="button-secondary" href="/shop/discovery-pack">Try in Discovery Set</Link>
+        {isDiscoverySet
+          ? <Link className="button-secondary" href="/shop/fragrances">View All Fragrances</Link>
+          : <Link className="button-secondary" href="/shop/fragrances/discovery-set">Try in Discovery Set</Link>
+        }
       </div>
     </>
   );

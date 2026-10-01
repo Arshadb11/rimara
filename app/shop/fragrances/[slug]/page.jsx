@@ -126,13 +126,20 @@ export default async function ProductPage({ params }) {
   //     </section>
   //     <section className="catalog-feature">
   //       <div><p className="eyebrow">Discovery Pack</p><h2><LineReveal>Start with all four. Let one stay.</LineReveal></h2></div>
-  //       <Reveal><p>Fragrance should never be chosen in a hurry. It needs skin, time and air.</p><p>The Rimara Discovery Pack brings together four 10 ml fragrances: Air That Stays, Last Light, Wild Air and Quiet Blossom. Wear each one across a different hour, mood and day.</p><Link className="button-secondary" href="/shop/discovery-pack">Explore Discovery Pack</Link></Reveal>
+  //       <Reveal><p>Fragrance should never be chosen in a hurry. It needs skin, time and air.</p><p>The Rimara Discovery Pack brings together four 10 ml fragrances: Air That Stays, Last Light, Wild Air and Quiet Blossom. Wear each one across a different hour, mood and day.</p><Link className="button-secondary" href="/shop/fragrances/discovery-set">Explore Discovery Pack</Link></Reveal>
   //     </section>
   //     <Stagger className="product-grid">{products.filter((item) => item.id !== product.id).map((item) => <ProductCard key={item.id} product={item} />)}</Stagger>
   //   </main>
   // );
+  const isDiscoverySet = slug === 'discovery-set';
+
   return (
     <main>
+      {isDiscoverySet && (
+        <section className="catalog-hero">
+          <div><h1><LineReveal>Start with all four. Let one stay.</LineReveal></h1></div>
+        </section>
+      )}
       <section className="product-detail">
         <div className="product-visual product-gallery">
           <Image className="product-gallery__master" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} width={1086} height={1448} priority />
@@ -149,7 +156,7 @@ export default async function ProductPage({ params }) {
           <div>{product.fragrance_type}</div>
           <div className="body-copy" dangerouslySetInnerHTML={{ __html: product.item_classification }}></div>
           <div dangerouslySetInnerHTML={{ __html: product.description }}></div>
-          <ProductPurchase product={product} />
+          <ProductPurchase product={product} isDiscoverySet={isDiscoverySet} />
         </Reveal>
       </section>
       <section className="catalog-feature">
@@ -164,48 +171,54 @@ export default async function ProductPage({ params }) {
           <article key={`${product.product_name}3`} style={{ "--note-color": product.color }}><div className="note-image" /><p className="eyebrow">{product.base_note}</p><div dangerouslySetInnerHTML={{ __html: product.base_note_description }} /></article>
         </div>
       </section> */}
-      <section className="notes-section">
-        <div className="notes-section__heading">
-          <p className="eyebrow">Key Notes</p>
-          <h2><LineReveal>Three materials. One atmosphere.</LineReveal></h2>
-        </div>
-        <div className="note-grid note-grid--three">
-          <article style={{ "--note-color": product.color }}>
-            {product.top_note_image
-              ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.top_note_image}`} alt={product.top_note || "Top note"} width={800} height={600} unoptimized />
-              : <div className="note-image" />}
-            <p className="eyebrow">{product.top_note}</p>
-            <div dangerouslySetInnerHTML={{ __html: product.top_note_description}} />
-          </article>
-          <article style={{ "--note-color": product.color }}>
-            {product.heart_note_image
-              ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.heart_note_image}`} alt={product.heart_note || "Heart note"} width={800} height={600} unoptimized />
-              : <div className="note-image" />}
-            <p className="eyebrow">{product.heart_note}</p>
-            <div dangerouslySetInnerHTML={{ __html: product.heart_note_description}} />
-          </article>
-          <article style={{ "--note-color": product.color }}>
-            {product.base_note_image
-              ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.base_note_image}`} alt={product.base_note || "Base note"} width={800} height={600} unoptimized />
-              : <div className="note-image" />}
-            <p className="eyebrow">{product.base_note}</p>
-            <div dangerouslySetInnerHTML={{ __html: product.base_note_description}} />
-          </article>
-        </div>
-      </section>
-      <section className="catalog-feature">
-        <div><p className="eyebrow">How it feels</p><h2 dangerouslySetInnerHTML={{ __html: product.longevity }}></h2></div>
-        <Reveal><p className="eyebrow">When to wear</p><div dangerouslySetInnerHTML={{ __html: product.how_to_use }}></div></Reveal>
-      </section>
-      <section className="product-accordions">
-        <details><summary>Ingredients</summary><div dangerouslySetInnerHTML={{ __html: product.ingredients }}></div></details>
-        <details><summary>Safety information</summary><p>FLAMMABLE. Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. For external use only. Avoid contact with eyes. Keep out of reach of children. Discontinue use if irritation occurs.</p></details>
-        <details><summary>Product details and compliance</summary><div dangerouslySetInnerHTML={{ __html: product.additional_details }}></div></details>
-      </section>
+      {!isDiscoverySet && (
+        <section className="notes-section">
+          <div className="notes-section__heading">
+            <p className="eyebrow">Key Notes</p>
+            <h2><LineReveal>Three materials. One atmosphere.</LineReveal></h2>
+          </div>
+          <div className="note-grid note-grid--three">
+            <article style={{ "--note-color": product.color }}>
+              {product.top_note_image
+                ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.top_note_image}`} alt={product.top_note || "Top note"} width={800} height={600} unoptimized />
+                : <div className="note-image" />}
+              <p className="eyebrow">{product.top_note}</p>
+              <div dangerouslySetInnerHTML={{ __html: product.top_note_description}} />
+            </article>
+            <article style={{ "--note-color": product.color }}>
+              {product.heart_note_image
+                ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.heart_note_image}`} alt={product.heart_note || "Heart note"} width={800} height={600} unoptimized />
+                : <div className="note-image" />}
+              <p className="eyebrow">{product.heart_note}</p>
+              <div dangerouslySetInnerHTML={{ __html: product.heart_note_description}} />
+            </article>
+            <article style={{ "--note-color": product.color }}>
+              {product.base_note_image
+                ? <Image className="note-image note-image--photo" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${product.base_note_image}`} alt={product.base_note || "Base note"} width={800} height={600} unoptimized />
+                : <div className="note-image" />}
+              <p className="eyebrow">{product.base_note}</p>
+              <div dangerouslySetInnerHTML={{ __html: product.base_note_description}} />
+            </article>
+          </div>
+        </section>
+      )}
+      {!isDiscoverySet && (
+        <section className="catalog-feature">
+          <div><p className="eyebrow">How it feels</p><h2 dangerouslySetInnerHTML={{ __html: product.longevity }}></h2></div>
+          <Reveal><p className="eyebrow">When to wear</p><div dangerouslySetInnerHTML={{ __html: product.how_to_use }}></div></Reveal>
+        </section>
+      )}
+      {!isDiscoverySet && (
+        <section className="product-accordions">
+          <details><summary>Ingredients</summary><div dangerouslySetInnerHTML={{ __html: product.ingredients }}></div></details>
+          <details><summary>Safety information</summary><p>FLAMMABLE. Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. For external use only. Avoid contact with eyes. Keep out of reach of children. Discontinue use if irritation occurs.</p></details>
+          <details><summary>Product details and compliance</summary><div dangerouslySetInnerHTML={{ __html: product.additional_details }}></div></details>
+        </section>
+      )}
       <ProductReviews product={product} />
       {/* <section className="catalog-feature">
         <div><p className="eyebrow">Discovery Pack</p><h2><LineReveal>Start with all four. Let one stay.</LineReveal></h2></div>
-        <Reveal><p>Fragrance should never be chosen in a hurry. It needs skin, time and air.</p><p>The Rimara Discovery Pack brings together four 10 ml fragrances: Air That Stays, Last Light, Wild Air and Quiet Blossom. Wear each one across a different hour, mood and day.</p><Link className="button-secondary" href="/shop/discovery-pack">Explore Discovery Pack</Link></Reveal>
+        <Reveal><p>Fragrance should never be chosen in a hurry. It needs skin, time and air.</p><p>The Rimara Discovery Pack brings together four 10 ml fragrances: Air That Stays, Last Light, Wild Air and Quiet Blossom. Wear each one across a different hour, mood and day.</p><Link className="button-secondary" href="/shop/fragrances/discovery-set">Explore Discovery Pack</Link></Reveal>
       </section> */}
       {/* <Stagger className="product-grid">{product.related_prods.map((item) => <ProductCard key={item.product_id} product={item} />)}</Stagger> */}
       <StickyCart product={product} />

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -124,7 +124,7 @@ function enrichProduct(product) {
 function DiagnosticModal({ product, onClose, onReset }) {
   const href =
     product.slug === "discovery-pack"
-      ? "/shop/discovery-pack"
+      ? "/shop/fragrances/discovery-set"
       : `/shop/fragrances/${product.slug}`;
 
   const images = (() => {
@@ -514,3 +514,4 @@ export default function DiagnosticForm() {
     </>
   );
 }
+

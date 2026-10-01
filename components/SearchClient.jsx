@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -134,7 +134,7 @@ export default function SearchClient() {
                 ["Last Light", "/shop/fragrances/last-light"],
                 ["Quiet Blossom", "/shop/fragrances/quiet-blossom"],
                 ["Wild Air", "/shop/fragrances/wild-air"],
-                ["Discovery Sets", "/shop/discovery-pack"],
+                ["Discovery Sets", "/shop/fragrances/discovery-set"],
               ].map(([label, href]) => (
                 <Link key={label} className="nav-link" href={href}>{label} →</Link>
               ))}
@@ -175,3 +175,4 @@ export default function SearchClient() {
     </main>
   );
 }
+

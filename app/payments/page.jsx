@@ -36,7 +36,7 @@ const sections = [
     numbered: [
       { text: "Credit and Debit Cards (Visa, MasterCard, and national card schemes such as Jaywan)" },
       { text: "Apple Pay and Google Pay, where available" },
-      { text: "Cash on Delivery" },
+      { text: "Cash on Delivery (COD) is offered for orders shipped within the United Arab Emirates. A non-refundable handling fee of AED 10 applies to all COD orders. This fee will be added to your order total at checkout. All COD orders are subject to verification and confirmation over a call and/or WhatsApp before dispatch." },
       { text: "Local digital wallets, where available" },
     ],
   },
@@ -73,14 +73,14 @@ const sections = [
   {
     title: "Chargebacks",
     content: [
-      "Customers are advised to contact us at care@rimara.ae to resolve billing disputes before filing a formal chargeback with their bank.",
+      <>Customers are advised to contact us at <a href="mailto:care@rimara.ae">care@rimara.ae</a> to resolve billing disputes before filing a formal chargeback with their bank.</>,
     ],
   },
   {
     title: "Contact Us",
     content: [
       "\"rimara PARFUMS\" (rimara.ae) is a registered trademark of Sillage FZCO, and thus, all customer payments may reflect \"Sillage FZCO\" as the merchant's (Doing Business As) name on their receipt/statement/billing descriptor.",
-      "If you have any questions regarding this Payments Policy or your transaction, please contact us at care@rimara.ae.",
+      <>If you have any questions regarding this Payments Policy or your transaction, please contact us at <a href="mailto:care@rimara.ae">care@rimara.ae</a>.</>,
     ],
   },
 ];

@@ -6,11 +6,12 @@ import { motion } from "motion/react";
 import { StaggerItem, ease, useReveal } from "./Reveal";
 
 export default function ProductCard({ product }) {
-  const [ref, visible] = useReveal();
+  // threshold 0 + rootMargin "300px" below viewport = triggers 300px before card enters view
+  const [ref, visible] = useReveal(0, "0px 0px 300px 0px");
   const item = (delay = 0) => ({
-    initial: { opacity: 0, y: 14, filter: "blur(8px)" },
-    animate: visible ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 14, filter: "blur(8px)" },
-    transition: { duration: 0.76, ease, delay }
+    initial: { opacity: 0, y: 8 },
+    animate: visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 },
+    transition: { duration: 0.55, ease, delay }
   });
 
   // return (
@@ -44,12 +45,12 @@ export default function ProductCard({ product }) {
 
   return (
     <StaggerItem className="h-full">
-      <Link ref={ref} className="product-card catalog-card" href={product.product_name.toLowerCase().trim().replace(/\s+/g, '-') == 'discovery-pack' ? '/shop/discovery-pack' : `/shop/fragrances/${product.product_name.toLowerCase().trim().replace(/\s+/g, '-')}`} style={{ "--card-accent": product.color, "--card-hover-bg": product.color }}>
+      <Link ref={ref} className="product-card catalog-card" href={product.product_name.toLowerCase().trim().replace(/\s+/g, '-') == 'discovery-pack' ? '/shop/fragrances/discovery-set' : `/shop/fragrances/${product.product_name.toLowerCase().trim().replace(/\s+/g, '-')}`} style={{ "--card-accent": product.color, "--card-hover-bg": product.color }}>
         <motion.span
           className="product-card__media"
-          initial={{ opacity: 0, scale: 1.03 }}
-          animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.03 }}
-          transition={{ duration: 1.1, ease }}
+          initial={{ opacity: 0 }}
+          animate={visible ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.55, ease }}
         >
           <Image className="product-card__image product-card__image--base" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} fill sizes="(max-width: 768px) 100vw, 25vw" />
           {/* <Image className="product-card__image product-card__image--base" src={`http://localhost/rimara-admin/public/storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} fill sizes="(max-width: 768px) 100vw, 25vw" /> */}
@@ -73,3 +74,4 @@ export default function ProductCard({ product }) {
     </StaggerItem>
   );
 }
+

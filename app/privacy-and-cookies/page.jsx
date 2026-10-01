@@ -92,7 +92,7 @@ const sections = [
   {
     title: "Contacting Us and Opting Out",
     content: [
-      "If you have any queries about this Privacy and Cookies Policy, you can email us at care@rimara.ae.",
+      <>If you have any queries about this Privacy and Cookies Policy, you can email us at <a href="mailto:care@rimara.ae">care@rimara.ae</a>.</>,
       "When you first register with us you will be able to choose whether or not to receive marketing communications from us or our carefully selected third parties. Whenever you receive a marketing communication or newsletter from us (which may be by email, SMS, WhatsApp, push notification, telephone, or direct mail), you will be given an opportunity to unsubscribe. In addition, you can change your marketing preferences at any time by contacting us as described above.",
       "You may also request rectification of any incorrect data displayed in your online account by contacting us or in certain cases, you may be able to directly amend certain information online.",
     ],

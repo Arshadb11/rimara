@@ -7,7 +7,7 @@ const sections = [
   {
     title: "Returns",
     content: [
-      "Any return request must be reported via emailing us at care@rimara.ae within 7 calendar days from (and including) the date of delivery.",
+      <>Any return request must be reported via emailing us at <a href="mailto:care@rimara.ae">care@rimara.ae</a> within 7 calendar days from (and including) the date of delivery.</>,
       "Returns will ONLY be accepted in the following cases:",
     ],
     numbered: [
@@ -45,7 +45,7 @@ const sections = [
   {
     title: "Cancellations",
     content: [
-      "Customers may cancel their order only if the order has not been processed at our end. To do so, we require the customer to contact care@rimara.ae with their order details within 24 hours from order placement. We cannot guarantee any cancellation if not notified to us immediately and/or once the order has already been processed.",
+      <>Customers may cancel their order only if the order has not been processed at our end. To do so, we require the customer to contact <a href="mailto:care@rimara.ae">care@rimara.ae</a> with their order details within 24 hours from order placement. We cannot guarantee any cancellation if not notified to us immediately and/or once the order has already been processed.</>,
     ],
   },
 ];
@@ -63,10 +63,9 @@ export default function ReturnsPage() {
 
         {/* ── Preamble / Promise ── */}
         <div className="tc-preamble">
-          <p className="tc-kicker">Our Promise</p>
+          <h2 className="tc-section-title">Our Promise</h2>
           <p>
-            rimara.ae promises to sell you only 100% genuine products and hopes that you will be
-            delighted with your order.
+            rimara.ae guarantees 100% authentic products and your complete satisfaction.
           </p>
         </div>
 
