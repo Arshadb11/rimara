@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { useCatalog } from "@/components/CatalogContext";
@@ -566,7 +566,7 @@ function OrderConfirmed({ snapshot }) {
 // Checkout Page
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -2230,5 +2230,13 @@ export default function CheckoutPage() {
         </aside>
       </div>
     </main>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutContent />
+    </Suspense>
   );
 }
