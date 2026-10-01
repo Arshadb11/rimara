@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { formatPrice } from "@/lib/commerce";
 
-export default function StickyCart({ product, anchorId = "product-atc-btn" }) {
+export default function StickyCart({ product, anchorId = "product-atc-btn", isDiscoverySet = false }) {
   const [visible, setVisible]   = useState(false);
   const [added,   setAdded]     = useState(false);
   const defaultVariation = (product.variations || []).find(v => v.name?.includes("100")) ?? product.variations?.[0];
@@ -16,6 +16,9 @@ export default function StickyCart({ product, anchorId = "product-atc-btn" }) {
   const priceMap = Object.fromEntries(
     (product.variations || []).map((v) => [v.name, parseFloat(v.price)])
   );
+  const displayPrice = isDiscoverySet
+    ? parseFloat(product.price ?? 0)
+    : (priceMap[size] ?? 0);
 
   // Watch the main ATC button; show bar when it scrolls off-screen
   useEffect(() => {
@@ -36,7 +39,7 @@ export default function StickyCart({ product, anchorId = "product-atc-btn" }) {
       name:        product.product_name,
       image:       imageUrl,
       size,
-      price:       priceMap[size] ?? 0,
+      price:       isDiscoverySet ? parseFloat(product.price ?? 0) : (priceMap[size] ?? 0),
       product_id:  productId,
       product_name:    product.product_name,
       product_name_ar: product.product_name_ar || null,
@@ -76,31 +79,33 @@ export default function StickyCart({ product, anchorId = "product-atc-btn" }) {
           </div>
         </div>
 
-        {/* Size pills */}
-        <div className="sticky-cart__sizes">
-          {product.variations.map((v) => (
-            <button
-              key={v.id}
-              type="button"
-              className={`sticky-cart__size-pill${size === v.name ? " is-active" : ""}`}
-              onClick={() => { setSize(v.name); setProductId(v.id); setAdded(false); }}
-              aria-pressed={size === v.name}
-            >
-              {v.name}
-            </button>
-          ))}
-        </div>
+        {/* Size pills — hidden for discovery set */}
+        {!isDiscoverySet && (
+          <div className="sticky-cart__sizes">
+            {product.variations.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                className={`sticky-cart__size-pill${size === v.name ? " is-active" : ""}`}
+                onClick={() => { setSize(v.name); setProductId(v.id); setAdded(false); }}
+                aria-pressed={size === v.name}
+              >
+                {v.name}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Price + CTA */}
         <div className="sticky-cart__actions">
-          <span className="sticky-cart__price">{formatPrice(priceMap[size] ?? 0)}</span>
+          <span className="sticky-cart__price">{formatPrice(displayPrice)}</span>
           <button
             type="button"
             className="button-primary sticky-cart__btn"
             onClick={addToBag}
             aria-live="polite"
           >
-            {added ? "Added \u2713" : "Add to Bag"}
+            {added ? "Added ✓" : isDiscoverySet ? "ADD DISCOVERY SET" : "Add to Bag"}
           </button>
         </div>
 

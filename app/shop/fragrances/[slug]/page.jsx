@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { products } from "@/lib/products";
 import ProductPurchase from "@/components/ProductPurchase";
+import ProductGallery from "@/components/ProductGallery";
 import ProductCard from "@/components/ProductCard";
 import ProductReviews from "@/components/ProductReviews";
 import StickyCart from "@/components/StickyCart";
@@ -141,14 +142,11 @@ export default async function ProductPage({ params }) {
         </section>
       )}
       <section className="product-detail">
-        <div className="product-visual product-gallery">
-          <Image className="product-gallery__master" src={`${process.env.NEXT_PUBLIC_API_URL}storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} width={1086} height={1448} priority />
-          {/* <Image className="product-gallery__master" src={`http://localhost/rimara-admin/public/storage/${JSON.parse(product.images)[0]}`} alt={product.product_name} width={1086} height={1448} priority /> */}
-          <div className="product-gallery__thumbs">
-            {JSON.parse(product.images).map((src, index) => <Image key={`${src}-${index}`} src={`${process.env.NEXT_PUBLIC_API_URL}storage/${src}`} alt="" width={220} height={280} />)}
-            {/* {JSON.parse(product.images).map((src, index) => <Image key={`${src}-${index}`} src={`http://localhost/rimara-admin/public/storage/${src}`} alt="" width={220} height={280} />)} */}
-          </div>
-        </div>
+        <ProductGallery
+          images={JSON.parse(product.images)}
+          productName={product.product_name}
+          apiUrl={process.env.NEXT_PUBLIC_API_URL}
+        />
         <Reveal className="product-buy">
           <div className="product-meta" dangerouslySetInnerHTML={{ __html: product.occasion }}></div>
           <h1><LineReveal>{product.product_name}</LineReveal></h1>
@@ -221,7 +219,7 @@ export default async function ProductPage({ params }) {
         <Reveal><p>Fragrance should never be chosen in a hurry. It needs skin, time and air.</p><p>The Rimara Discovery Pack brings together four 10 ml fragrances: Air That Stays, Last Light, Wild Air and Quiet Blossom. Wear each one across a different hour, mood and day.</p><Link className="button-secondary" href="/shop/fragrances/discovery-set">Explore Discovery Pack</Link></Reveal>
       </section> */}
       {/* <Stagger className="product-grid">{product.related_prods.map((item) => <ProductCard key={item.product_id} product={item} />)}</Stagger> */}
-      <StickyCart product={product} />
+      <StickyCart product={product} isDiscoverySet={isDiscoverySet} />
     </main>
   );
 }

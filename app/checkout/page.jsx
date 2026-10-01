@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
 import { useCatalog } from "@/components/CatalogContext";
@@ -740,7 +740,7 @@ function OrderConfirmed({ snapshot }) {
 // Checkout Page
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -1986,26 +1986,26 @@ export default function CheckoutPage() {
               label="State / Emirate"
               error={fe.state}
             >
-              <input
+              <select
                 name="state"
                 autoComplete="address-level1"
                 disabled={isLoading}
-                value={
-                  formValues.state
-                }
-                className={inputCls(
-                  "state"
-                )}
+                value={formValues.state}
+                className={inputCls("state")}
                 onChange={(e) =>
-                  handleFieldChange(
-                    "state",
-                    e.target.value
-                  )
+                  handleFieldChange("state", e.target.value)
                 }
-                aria-invalid={
-                  !!fe.state
-                }
-              />
+                aria-invalid={!!fe.state}
+              >
+                <option value="">Select Emirate…</option>
+                <option value="Abu Dhabi">Abu Dhabi</option>
+                <option value="Dubai">Dubai</option>
+                <option value="Sharjah">Sharjah</option>
+                <option value="Ajman">Ajman</option>
+                <option value="Umm Al Quwain">Umm Al Quwain</option>
+                <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                <option value="Fujairah">Fujairah</option>
+              </select>
             </Field>
           </section>
 
@@ -2423,5 +2423,13 @@ export default function CheckoutPage() {
         </aside>
       </div>
     </main>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutContent />
+    </Suspense>
   );
 }

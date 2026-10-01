@@ -1292,6 +1292,30 @@ h3 {
   object-fit: contain;
   padding: 10px;
   border: 1px solid var(--rimara-border);
+  transition: opacity 0.2s ease;
+}
+
+/* Thumb button wrapper */
+.product-gallery__thumb-btn {
+  display: block;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.product-gallery__thumb-btn:hover {
+  opacity: 1;
+}
+
+.product-gallery__thumb-btn.is-active {
+  opacity: 1;
+}
+
+.product-gallery__thumb-btn.is-active img {
+  border-color: var(--rimara-ink);
 }
 
 .product-accord {
@@ -1589,7 +1613,8 @@ h3 {
   text-transform: uppercase;
 }
 
-.checkout-form input {
+.checkout-form input,
+.checkout-form select {
   width: 100%;
   min-height: 50px;
   padding: 0 14px;
@@ -1599,18 +1624,31 @@ h3 {
   font: 17px var(--font-body);
 }
 
-.checkout-form input:focus {
+.checkout-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23333' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+}
+
+.checkout-form input:focus,
+.checkout-form select:focus {
   outline: 2px solid var(--rimara-ink);
   outline-offset: 2px;
 }
 
 /* â”€â”€ Validation error states â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-.checkout-form input.is-invalid {
+.checkout-form input.is-invalid,
+.checkout-form select.is-invalid {
   border-color: #b91c1c;
   outline: none;
 }
 
-.checkout-form input.is-invalid:focus {
+.checkout-form input.is-invalid:focus,
+.checkout-form select.is-invalid:focus {
   outline: 2px solid #b91c1c;
 }
 
