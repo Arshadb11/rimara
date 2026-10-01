@@ -187,11 +187,11 @@ export default function ProductReviews({ product }) {
               <span>Rating *</span>
               <select name="star" value={formData.star} onChange={handleChange} disabled={isSubmitting}>
                 <option value="" disabled>Select rating</option>
-                <option value="5">★★★★★ — Stayed beautifully</option>
-                <option value="4">★★★★☆ — Memorable</option>
-                <option value="3">★★★☆☆ — Still discovering</option>
-                <option value="2">★★☆☆☆ — Not my air</option>
-                <option value="1">★☆☆☆☆ — Disappointing</option>
+                <option value="5-Stayed beautifully">★★★★★ — Stayed beautifully</option>
+                <option value="4-Memorable">★★★★☆ — Memorable</option>
+                <option value="3-Still discovering">★★★☆☆ — Still discovering</option>
+                <option value="2-Not my air">★★☆☆☆ — Not my air</option>
+                <option value="1-Disappointing">★☆☆☆☆ — Disappointing</option>
               </select>
               {errors.star && <span className="field-error">{errors.star}</span>}
             </label>
