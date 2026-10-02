@@ -166,7 +166,73 @@ function OrderConfirmed({ snapshot }) {
     items,
     pricing,
     payMethod,
+    paymentStatus,
+    isUrlOrder,
   } = snapshot;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Failed payment — ONLY for /checkout?q=...
+  // ─────────────────────────────────────────────────────────────────────────
+
+  const isFailedUrlOrder =
+    isUrlOrder &&
+    paymentStatus === "failed";
+
+  if (isFailedUrlOrder) {
+    return (
+      <main className="commerce-page">
+        <section className="empty-state">
+          <p
+            className="eyebrow"
+            style={{
+              color: "var(--rimara-ink)",
+            }}
+          >
+            Payment failed
+          </p>
+
+          <h1>
+            Your order has failed.
+          </h1>
+
+          <p
+            className="body-copy"
+            style={{
+              marginTop: "8px",
+              maxWidth: "560px",
+            }}
+          >
+            Your order has failed or you canceled the
+            payment. Please try again.
+          </p>
+
+          {/* <Link
+            className="button-primary"
+            href="/checkout"
+            style={{
+              marginTop: "24px",
+            }}
+          >
+            Try again
+          </Link> */}
+
+          <Link
+            className="button-secondary"
+            href="/shop/fragrances"
+            style={{
+              marginTop: "8px",
+            }}
+          >
+            Continue shopping
+          </Link>
+        </section>
+      </main>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Normal successful order confirmation
+  // ─────────────────────────────────────────────────────────────────────────
 
   const methodLabel =
     payMethod === "cod"
@@ -180,14 +246,17 @@ function OrderConfirmed({ snapshot }) {
       <header
         className="commerce-heading"
         style={{
-          borderBottom: "1px solid var(--rimara-border)",
+          borderBottom:
+            "1px solid var(--rimara-border)",
           paddingBottom: "32px",
           marginBottom: "48px",
         }}
       >
         <p
           className="eyebrow"
-          style={{ color: "var(--rimara-ink)" }}
+          style={{
+            color: "var(--rimara-ink)",
+          }}
         >
           Order confirmed
         </p>
@@ -224,13 +293,15 @@ function OrderConfirmed({ snapshot }) {
 
           <section
             style={{
-              border: "1px solid var(--rimara-border)",
+              border:
+                "1px solid var(--rimara-border)",
               padding: "28px",
             }}
           >
             <h2
               style={{
-                fontSize: "clamp(18px,2vw,24px)",
+                fontSize:
+                  "clamp(18px,2vw,24px)",
                 marginBottom: "24px",
               }}
             >
@@ -244,38 +315,70 @@ function OrderConfirmed({ snapshot }) {
               }}
             >
               {items.map((item) => {
-                const unitEff = effectivePrice(
-                  item.price,
-                  item.discount
-                );
+                const unitEff =
+                  effectivePrice(
+                    item.price,
+                    item.discount
+                  );
 
                 const isOnSale =
-                  unitEff < Number(item.price || 0);
+                  unitEff <
+                  Number(
+                    item.price || 0
+                  );
 
-                const label = discountLabel(item.discount);
+                const label =
+                  discountLabel(
+                    item.discount
+                  );
 
                 return (
                   <div
-                    key={item.id + "-" + item.size}
+                    key={
+                      item.id +
+                      "-" +
+                      item.size
+                    }
                     style={{
                       display: "flex",
                       gap: "16px",
-                      alignItems: "flex-start",
-                      paddingBottom: "20px",
+                      alignItems:
+                        "flex-start",
+                      paddingBottom:
+                        "20px",
                       borderBottom:
                         "1px solid var(--rimara-border)",
                     }}
                   >
                     {/* Image */}
 
-                    {item.image && item.image.length > 0 && (
+                    {Array.isArray(
+                      item.image
+                    ) &&
+                    item.image.length >
+                      0 ? (
                       <img
                         src={`${process.env.NEXT_PUBLIC_API_URL}storage/${item.image[0]}`}
                         alt={item.name}
                         style={{
                           width: 72,
                           height: 72,
-                          objectFit: "cover",
+                          objectFit:
+                            "cover",
+                          background:
+                            "var(--rimara-stone)",
+                          flexShrink: 0,
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={`${item.image}`}
+                        alt={item.name}
+                        style={{
+                          width: 72,
+                          height: 72,
+                          objectFit:
+                            "cover",
                           background:
                             "var(--rimara-stone)",
                           flexShrink: 0,
@@ -285,13 +388,20 @@ function OrderConfirmed({ snapshot }) {
 
                     {/* Info */}
 
-                    <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        flex: 1,
+                      }}
+                    >
                       <p
                         style={{
                           font: "13px var(--font-label)",
-                          letterSpacing: ".06em",
-                          textTransform: "uppercase",
-                          margin: "0 0 4px",
+                          letterSpacing:
+                            ".06em",
+                          textTransform:
+                            "uppercase",
+                          margin:
+                            "0 0 4px",
                         }}
                       >
                         {item.name}
@@ -301,7 +411,8 @@ function OrderConfirmed({ snapshot }) {
                         style={{
                           font: "13px var(--font-body)",
                           opacity: 0.6,
-                          margin: "0 0 4px",
+                          margin:
+                            "0 0 4px",
                         }}
                       >
                         {item.size
@@ -313,8 +424,10 @@ function OrderConfirmed({ snapshot }) {
                         <p
                           style={{
                             font: "11px var(--font-label)",
-                            letterSpacing: ".06em",
-                            textTransform: "uppercase",
+                            letterSpacing:
+                              ".06em",
+                            textTransform:
+                              "uppercase",
                             opacity: 0.6,
                             margin: 0,
                           }}
@@ -328,20 +441,25 @@ function OrderConfirmed({ snapshot }) {
 
                     <div
                       style={{
-                        textAlign: "right",
+                        textAlign:
+                          "right",
                         flexShrink: 0,
                       }}
                     >
                       {isOnSale && (
                         <s
                           style={{
-                            display: "block",
+                            display:
+                              "block",
                             font: "12px var(--font-body)",
                             opacity: 0.4,
                           }}
                         >
                           {formatPrice(
-                            Number(item.price || 0) *
+                            Number(
+                              item.price ||
+                                0
+                            ) *
                               item.quantity
                           )}
                         </s>
@@ -353,7 +471,8 @@ function OrderConfirmed({ snapshot }) {
                         }}
                       >
                         {formatPrice(
-                          unitEff * item.quantity
+                          unitEff *
+                            item.quantity
                         )}
                       </strong>
                     </div>
@@ -367,13 +486,15 @@ function OrderConfirmed({ snapshot }) {
 
           <section
             style={{
-              border: "1px solid var(--rimara-border)",
+              border:
+                "1px solid var(--rimara-border)",
               padding: "28px",
             }}
           >
             <h2
               style={{
-                fontSize: "clamp(18px,2vw,24px)",
+                fontSize:
+                  "clamp(18px,2vw,24px)",
                 marginBottom: "20px",
               }}
             >
@@ -391,35 +512,52 @@ function OrderConfirmed({ snapshot }) {
               }}
             >
               <span>
-                {address.first_name} {address.last_name}
+                {address.first_name}{" "}
+                {address.last_name}
               </span>
 
               {address.address && (
-                <span>{address.address}</span>
+                <span>
+                  {address.address}
+                </span>
               )}
 
-              {(address.city || address.pincode) && (
+              {(address.city ||
+                address.pincode) && (
                 <span>
-                  {[address.city, address.pincode]
+                  {[
+                    address.city,
+                    address.pincode,
+                  ]
                     .filter(Boolean)
                     .join(", ")}
                 </span>
               )}
 
               {address.state && (
-                <span>{address.state}</span>
+                <span>
+                  {address.state}
+                </span>
               )}
 
-              <span>United Arab Emirates</span>
+              <span>
+                United Arab Emirates
+              </span>
 
               {address.mobile && (
-                <span style={{ marginTop: "8px" }}>
+                <span
+                  style={{
+                    marginTop: "8px",
+                  }}
+                >
                   {address.mobile}
                 </span>
               )}
 
               {address.email && (
-                <span>{address.email}</span>
+                <span>
+                  {address.email}
+                </span>
               )}
             </address>
           </section>
@@ -428,13 +566,15 @@ function OrderConfirmed({ snapshot }) {
 
           <section
             style={{
-              border: "1px solid var(--rimara-border)",
+              border:
+                "1px solid var(--rimara-border)",
               padding: "28px",
             }}
           >
             <h2
               style={{
-                fontSize: "clamp(18px,2vw,24px)",
+                fontSize:
+                  "clamp(18px,2vw,24px)",
                 marginBottom: "12px",
               }}
             >
@@ -444,8 +584,10 @@ function OrderConfirmed({ snapshot }) {
             <p
               style={{
                 font: "13px var(--font-label)",
-                letterSpacing: ".06em",
-                textTransform: "uppercase",
+                letterSpacing:
+                  ".06em",
+                textTransform:
+                  "uppercase",
                 opacity: 0.75,
                 margin: 0,
               }}
@@ -464,9 +606,15 @@ function OrderConfirmed({ snapshot }) {
 
           {pricing.hasDiscount && (
             <div>
-              <span>Original subtotal</span>
+              <span>
+                Original subtotal
+              </span>
 
-              <s style={{ opacity: 0.45 }}>
+              <s
+                style={{
+                  opacity: 0.45,
+                }}
+              >
                 {formatPrice(
                   pricing.originalSubtotal
                 )}
@@ -479,28 +627,40 @@ function OrderConfirmed({ snapshot }) {
               <span
                 style={{
                   font: "11px var(--font-label)",
-                  letterSpacing: ".06em",
-                  textTransform: "uppercase",
+                  letterSpacing:
+                    ".06em",
+                  textTransform:
+                    "uppercase",
                 }}
               >
                 Discount
               </span>
 
               <strong>
-                −{formatPrice(pricing.totalDiscount)}
+                −
+                {formatPrice(
+                  pricing.totalDiscount
+                )}
               </strong>
             </div>
           )}
 
           <div>
-            <span>Subtotal</span>
+            <span>
+              Subtotal
+            </span>
+
             <strong>
-              {formatPrice(pricing.totalPrice)}
+              {formatPrice(
+                pricing.totalPrice
+              )}
             </strong>
           </div>
 
           <div>
-            <span>Shipping</span>
+            <span>
+              Shipping
+            </span>
 
             <strong>
               {pricing.isFreeShipping
@@ -511,9 +671,12 @@ function OrderConfirmed({ snapshot }) {
             </strong>
           </div>
 
-          {pricing.serviceFeeNum > 0 && (
+          {pricing.serviceFeeNum >
+            0 && (
             <div>
-              <span>Service fee</span>
+              <span>
+                Service fee
+              </span>
 
               <strong>
                 {formatPrice(
@@ -525,26 +688,36 @@ function OrderConfirmed({ snapshot }) {
 
           {pricing.codPrice > 0 && (
             <div>
-              <span>COD fee</span>
+              <span>
+                COD fee
+              </span>
 
               <strong>
-                {formatPrice(pricing.codPrice)}
+                {formatPrice(
+                  pricing.codPrice
+                )}
               </strong>
             </div>
           )}
 
           <div className="order-total">
-            <span>Total paid</span>
+            <span>
+              Total paid
+            </span>
 
             <strong>
-              {formatPrice(pricing.grandTotal)}
+              {formatPrice(
+                pricing.grandTotal
+              )}
             </strong>
           </div>
 
           <Link
             className="button-primary"
             href="/"
-            style={{ marginTop: "8px" }}
+            style={{
+              marginTop: "8px",
+            }}
           >
             Return home
           </Link>
@@ -552,7 +725,9 @@ function OrderConfirmed({ snapshot }) {
           <Link
             className="button-secondary"
             href="/shop/fragrances"
-            style={{ marginTop: "4px" }}
+            style={{
+              marginTop: "4px",
+            }}
           >
             Continue shopping
           </Link>
@@ -561,7 +736,6 @@ function OrderConfirmed({ snapshot }) {
     </main>
   );
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Checkout Page
 // ─────────────────────────────────────────────────────────────────────────────
@@ -946,6 +1120,13 @@ function CheckoutContent() {
           pricing,
 
           payMethod: paymentMethod,
+
+          isUrlOrder: true,
+
+          paymentStatus:
+            String(
+              data.payment_status || ""
+            ).toLowerCase(),
         };
 
         setOrderSnapshot(snapshot);
@@ -956,6 +1137,14 @@ function CheckoutContent() {
         );
 
         setPayMethod(paymentMethod);
+
+        if (
+          String(
+            data.payment_status || ""
+          ).toLowerCase() === "completed"
+        ) {
+          clearCart();
+        }
 
         setState("success");
 
@@ -1310,6 +1499,8 @@ function CheckoutContent() {
         null,
     };
 
+    // console.log(payload);return;
+
     try {
       const res = await fetch(
         API_URL,
@@ -1370,6 +1561,8 @@ function CheckoutContent() {
               codPrice,
 
               grandTotal,
+
+              isUrlOrder: false,
             },
           });
 
