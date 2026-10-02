@@ -75,11 +75,15 @@ export default async function FragrancesPage() {
       </Stagger>
       <section className="catalog-feature">
         <div><p className="eyebrow">Discovery Set</p><h2><LineReveal>Start with all four. Let one stay.</LineReveal></h2></div>
-        <Reveal className="catalog-feature__media-copy"><Image src="/assets/images/catalog/start-with.png" alt="Rimara Discovery Set atmosphere" width={1400} height={1000} /><div><p>Fragrance should never be chosen in a hurry. It needs skin, time and air. Only then does it begin to show what it really is.</p>
-        <p>The Rimara Discovery Set brings together four 10 ml fragrances: Air That Stays, Last Light, Quiet Blossom and Wild Air. Each one belongs to a different hour, mood and memory.</p><p>Wear them across different days. Let each scent open, settle and return in its own way. The right one will not need convincing — it will simply feel like yours.</p><Link className="button-secondary" href="/shop/fragrances/discovery-set">Explore Discovery Set</Link></div></Reveal>
+        <Reveal className="catalog-feature__media-copy"><Image src="/assets/images/catalog/start-with.png" alt="Rimara Discovery Set atmosphere" width={1400} height={1000} /><div><p>Fragrance should never be chosen in a hurry. It needs skin, time and air. Only then does it begin to show what it really is.</p><br/>
+        <p>The Rimara Discovery Set brings together four 10 ml fragrances: Air That Stays, Last Light, Quiet Blossom and Wild Air. Each one belongs to a different hour, mood and memory.</p><br/>
+        <p>Wear them across different days. Let each scent open, settle and return in its own way. The right one will not need convincing — it will simply feel like yours.</p>
+        <Link className="button-secondary" href="/shop/fragrances/discovery-set">Explore Discovery Set</Link></div></Reveal>
       </section>
       <section className="catalog-feature catalog-feature--stacked">
-        <Reveal><p className="eyebrow">How we select fragrances</p><h2><LineReveal>Selected by instinct. Refined by craft.</LineReveal></h2><p>We choose fragrances the way people remember moments — through atmosphere, contrast and emotion. A scent must first create a feeling. Then it must earn its place on skin.</p><p>Every Rimara fragrance is shaped around four questions: What hour does it belong to? What memory does it carry? How does it move in the air? What should remain after you leave?</p></Reveal>
+        <Reveal><p className="eyebrow">How we select fragrances</p><h2><LineReveal>Selected by instinct. Refined by craft.</LineReveal></h2>
+        <p>We choose fragrances the way people remember moments - through atmosphere, contrast and emotion. A scent must first create a feeling. Then it must earn its place on skin.</p><br/>
+        <p>Every Rimara fragrance is shaped around four questions: What hour does it belong to? What memory does it carry? How does it move in the air? What should remain after you leave?</p></Reveal>
         <div className="catalog-points hairline-frame"><HairlineDraw />{[
           ["/assets/images/catalog/the-hour.svg", "The hour", "Each scent begins with a time of day."],
           ["/assets/images/catalog/the-mood.svg", "The mood", "Every note must support the emotional world."],
@@ -89,7 +93,10 @@ export default async function FragrancesPage() {
       </section>
       <section className="catalog-feature">
         <div><p className="eyebrow">Our psychology of fragrance</p><h2><LineReveal>A fragrance is not chosen by the nose alone.</LineReveal></h2></div>
-        <Reveal className="catalog-feature__media-copy"><Image src="/assets/images/catalog/our-psychology.png" alt="Rimara psychology of fragrance atmosphere" width={1400} height={1000} /><div><p>It begins deeper. Before words. Before reason. Before the mind explains why something feels familiar.</p><p>Scent has a private way of finding memory. It can return a room, a person, a season, or a version of yourself you had almost forgotten.</p><p>Rimara is built around that invisible connection. We do not create fragrances only from ingredients. We shape them around human signals — confidence, softness, warmth, movement, intimacy and presence.</p></div></Reveal>
+        <Reveal className="catalog-feature__media-copy"><Image src="/assets/images/catalog/our-psychology.png" alt="Rimara psychology of fragrance atmosphere" width={1400} height={1000} /><div>
+          <p>It begins deeper. Before words. Before reason. Before the mind explains why something feels familiar.</p><br/>
+          <p>Scent has a private way of finding memory. It can return a room, a person, a season, or a version of yourself you had almost forgotten.</p><br/>
+          <p>Rimara is built around that invisible connection. We do not create fragrances only from ingredients. We shape them around human signals - confidence, softness, warmth, movement, intimacy and presence.</p></div></Reveal>
       </section>
     </main>
   );

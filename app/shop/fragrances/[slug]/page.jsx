@@ -151,7 +151,7 @@ export default async function ProductPage({ params }) {
           <div className="product-meta" dangerouslySetInnerHTML={{ __html: product.occasion }}></div>
           <h1><LineReveal>{product.product_name}</LineReveal></h1>
           <div className="product-accord" dangerouslySetInnerHTML={{ __html: product.item_profile }}></div>
-          <div>{product.fragrance_type}</div>
+          <div>{product.fragrance_type.toUpperCase()}</div>
           <div className="body-copy" dangerouslySetInnerHTML={{ __html: product.item_classification }}></div>
           <div dangerouslySetInnerHTML={{ __html: product.description }}></div>
           <ProductPurchase product={product} isDiscoverySet={isDiscoverySet} />

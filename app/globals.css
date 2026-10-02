@@ -410,7 +410,7 @@ h3 {
 .page-hero,
 .catalog-feature {
   padding: 108px var(--page-gutter);
-  border-bottom: 1px solid var(--rimara-border);
+  /* border-bottom: 1px solid var(--rimara-border); */
 }
 
 .section-header,
@@ -702,7 +702,7 @@ h3 {
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
-  border: 1px solid var(--rimara-border);
+  /* border: 1px solid var(--rimara-border); */
 }
 
 .concept-hero-copy {

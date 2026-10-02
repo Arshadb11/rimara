@@ -99,7 +99,7 @@ export default function Footer() {
           </Link>
           <p className="footer-brand-line">
             A fine-fragrance brand from the house of{" "}
-            <Link href="/" className="footer-sillage-link">
+            <Link href="https://www.sillageofficial.ae/" className="footer-sillage-link">
               <Image
                 src="/assets/images/sillage-logo.jpg"
                 alt="Sillage"
