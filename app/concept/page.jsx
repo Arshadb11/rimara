@@ -64,15 +64,15 @@ export default function ConceptPage() {
       </section>
 
       {conceptActs.map(({ eyebrow, title, copy, image, alt, cta }) => (
-        <section className="catalog-feature" key={eyebrow}>
-          <div>
+        <section className="catalog-feature concept-act" key={eyebrow}>
+          <div className="concept-act__left">
             <p className="eyebrow">{eyebrow}</p>
             <h2><LineReveal>{title}</LineReveal></h2>
+            <p className="concept-act__copy">{copy}</p>
           </div>
           <Reveal>
             <div className="catalog-feature__media-copy concept-media-copy">
               <Image src={image} width={1200} height={760} alt={alt} loading="eager" unoptimized />
-              <p>{copy}</p>
             </div>
             {cta && <Link className="button-secondary" href="/diagnostic">FIND YOUR AIR</Link>}
           </Reveal>

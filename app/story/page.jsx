@@ -64,7 +64,7 @@ export default function StoryPage() {
           <h1><LineReveal>The story the air remembers.</LineReveal></h1>
         </div>
         <Reveal>
-          <p className="body-copy-large">Born from the moments we remember. Made for the moments we leave behind. <br /><br /> At Rimara, fragrance meets memory, and every sillage tells your story.”</p>
+          <p className="body-copy-large">Born from the moments we remember. Made for the moments we leave behind. <br /><br /> At Rimara, fragrance meets memory, and every sillage tells your story.</p>
         </Reveal>
       </section>
 
