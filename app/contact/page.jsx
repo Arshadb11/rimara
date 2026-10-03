@@ -12,7 +12,7 @@ export default function ContactPage() {
             For fragrance enquiries, gifting, collaborations, distribution conversations or anything else, write to us at <a href="mailto:care@rimara.ae">care@rimara.ae</a>.
           </p>
           <p className="body-copy muted" style={{ marginTop: "1.25em" }}>
-            &ldquo;Rimara Parfums&rdquo; is a registered trademark of Sillage FZCO<br />
+            &ldquo;rimara PARFUMS&rdquo; is a registered trademark of Sillage FZCO<br />
             IFZA Business Park, Silicon Oasis, Dubai, U.A.E.
           </p>
         </Reveal>

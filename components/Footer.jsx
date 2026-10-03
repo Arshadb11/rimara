@@ -9,7 +9,7 @@ import { ease, useReveal } from "./Reveal";
 const columns = [
   {
     title: "Shop",
-    links: [["All Fragrances", "/shop/fragrances"], ["Air That Stays", "/shop/fragrances/air-that-stays"], ["Last Light", "/shop/fragrances/last-light"], ["Quiet Blossom", "/shop/fragrances/quiet-blossom"], ["Wild Air", "/shop/fragrances/wild-air"], ["Discovery Sets", "/shop/fragrances/discovery-set"]]
+    links: [["All Fragrances", "/shop/fragrances"], ["Air That Stays", "/shop/fragrances/air-that-stays"], ["Last Light", "/shop/fragrances/last-light"], ["Quiet Blossom", "/shop/fragrances/quiet-blossom"], ["Wild Air", "/shop/fragrances/wild-air"], ["Discovery Set", "/shop/fragrances/discovery-set"]]
   },
   {
     title: "Explore",
@@ -99,7 +99,12 @@ export default function Footer() {
           </Link>
           <p className="footer-brand-line">
             A fine-fragrance brand from the house of{" "}
-            <Link href="https://www.sillageofficial.ae/" className="footer-sillage-link">
+            <Link
+              href="https://www.sillageofficial.ae/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-sillage-link"
+            >
               <Image
                 src="/assets/images/sillage-logo.jpg"
                 alt="Sillage"

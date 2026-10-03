@@ -11,9 +11,9 @@ const sections = [
       "We accept the following as a form of valid ID:",
     ],
     list: [
-      "Emirates ID (if a U.A.E. Resident)",
-      "U.A.E. driver's license",
-      "Passport copy",
+      "1. Emirates ID (if you are a U.A.E. Resident)",
+      "2. U.A.E. Driver's License",
+      "3. Passport Copy",
     ],
     footer: [
       "Failure to provide such documents upon request may lead to cancellation of the order and payment of the related charges. All information is collected lawfully and in accordance with prevailing Data Protection Laws.",
@@ -30,14 +30,14 @@ const sections = [
   {
     title: "Accepted Payment Methods",
     content: [
-      "We support secure online transactions through licensed payment gateways compliant with the Central Bank of the U.A.E. standards.",
+      "We support secure online transactions through licensed payment gateways, compliant with the standards of the Central Bank of the U.A.E.",
       "We accept:",
     ],
     numbered: [
       { text: "Credit and Debit Cards (Visa, MasterCard, and national card schemes such as Jaywan)" },
-      { text: "Apple Pay and Google Pay, where available" },
-      { text: "Cash on Delivery (COD) is offered for orders shipped within the United Arab Emirates. A non-refundable handling fee of AED 10 applies to all COD orders. This fee will be added to your order total at checkout. All COD orders are subject to verification and confirmation over a call and/or WhatsApp before dispatch." },
+      { text: "Apple Pay, Samsung Pay and Google Pay, where available" },
       { text: "Local digital wallets, where available" },
+      { text: "Cash on Delivery (COD) is offered for orders shipped within the United Arab Emirates. A non-refundable handling fee of AED 10 applies to all COD orders. This fee will be added to your order total at checkout. All COD orders are subject to verification and confirmation over a call and/or WhatsApp before dispatch." },
     ],
   },
   {

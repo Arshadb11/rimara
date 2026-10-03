@@ -64,7 +64,15 @@ export default function StoryPage() {
           <h1><LineReveal>The story the air remembers.</LineReveal></h1>
         </div>
         <Reveal>
-          <p className="body-copy-large">Born from the moments we remember. Made for the moments we leave behind. <br /><br /> At Rimara, fragrance meets memory, and every sillage tells your story.</p>
+          <div className="body-copy-large" style={{ maxWidth: "none" }}>
+            <div>Born from the moments we remember.</div>
+            <div style={{ paddingLeft: "clamp(36px, 6vw, 100px)", marginTop: "10px" }}>
+              Made for the moments we leave behind.
+            </div>
+            <div style={{ marginTop: "36px" }}>
+              At Rimara, fragrance meets memory, and every sillage tells your story.
+            </div>
+          </div>
         </Reveal>
       </section>
 
