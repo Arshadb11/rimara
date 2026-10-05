@@ -5,25 +5,16 @@ import { ForgotPasswordForm } from "@/components/AuthForms";
 import { LineReveal, Reveal } from "@/components/Reveal";
 
 export default function ForgotPasswordPage() {
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  // Logged-in customers may also reset their password (e.g. when they forgot the current one),
+  // so this page no longer redirects to /account. Their email is pre-filled for convenience.
+  const [defaultEmail, setDefaultEmail] = useState("");
 
   useEffect(() => {
-    if (window.localStorage.getItem("rimaraUser")) {
-      window.location.href = "/account";
-    } else {
-      setCheckingAuth(false);
-    }
+    try {
+      const stored = JSON.parse(window.localStorage.getItem("rimaraUser") || "null");
+      if (stored?.email) setDefaultEmail(stored.email);
+    } catch {}
   }, []);
-
-  if (checkingAuth) {
-    return (
-      <main style={{ display: "grid", placeItems: "center", minHeight: "60vh" }}>
-        <p style={{ font: "14px var(--font-label)", letterSpacing: ".1em", textTransform: "uppercase" }}>
-          Redirecting...
-        </p>
-      </main>
-    );
-  }
 
   return (
     <main>
@@ -35,7 +26,7 @@ export default function ForgotPasswordPage() {
         </Reveal>
         <Reveal className="auth-card">
           <p className="eyebrow">Forget Password</p>
-          <ForgotPasswordForm />
+          <ForgotPasswordForm key={defaultEmail} defaultEmail={defaultEmail} />
         </Reveal>
       </section>
     </main>

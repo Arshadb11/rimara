@@ -5,6 +5,17 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { StaggerItem, ease, useReveal } from "./Reveal";
 
+function stripHtml(html = "") {
+  let text = String(html || "");
+  for (let i = 0; i < 2; i++) {
+    text = text
+      .replace(/&lt;/gi, "<").replace(/&gt;/gi, ">")
+      .replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&")
+      .replace(/<[^>]*>/g, " ");
+  }
+  return text.replace(/\s+/g, " ").trim();
+}
+
 export default function ProductCard({ product }) {
   // threshold 0 + rootMargin "300px" below viewport = triggers 300px before card enters view
   const [ref, visible] = useReveal(0, "0px 0px 300px 0px");
@@ -67,7 +78,7 @@ export default function ProductCard({ product }) {
           <motion.p className="product-meta" {...item(0.16)}>{product.occasion?.replace(/<\/?[^>]+(>|$)/g, '').trim()}</motion.p>
           <motion.h2 {...item(0.28)}>{product.product_name}</motion.h2>
           <motion.p {...item(0.4)}>{product.item_classification?.replace(/<\/?[^>]+(>|$)/g, '').trim()}</motion.p>
-          <motion.p className="product-card__copy" {...item(0.52)}>{product.description.replace(/<\/?p>/g, '')}</motion.p>
+          <motion.p className="product-card__copy" {...item(0.52)}>{stripHtml(product.description)}</motion.p>
           <motion.span className="product-card__cta" {...item(0.64)}>{product.ctx}</motion.span>
         </div>
       </Link>

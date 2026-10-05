@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const ease = [0.22, 1, 0.36, 1];
 
-export function useReveal(amount = 0.2, rootMargin = "0px") {
+export function useReveal(amount = 0.05, rootMargin = "0px") {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
@@ -74,7 +74,8 @@ export function LineReveal({ children, className = "", delay = 0 }) {
 }
 
 export function Stagger({ children, className = "" }) {
-  const [ref, visible] = useReveal();
+  // threshold 0: the grid is very tall on mobile, so a fractional threshold may never be reached
+  const [ref, visible] = useReveal(0, "0px 0px 200px 0px");
 
   return (
     <motion.div

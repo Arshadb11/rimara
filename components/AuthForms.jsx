@@ -80,6 +80,7 @@ export function LoginForm() {
       if (response.ok && data?.message === "Login Successfully") {
         setGlobalMessage("Login successful! Redirecting...");
         const userPayload = {
+          id: data.data?.id || null,
           name: data.data?.name || "Rimara Customer",
           email: data.data?.email || email,
           mobile: data.data?.phone || null,
@@ -399,8 +400,8 @@ export function RegisterForm() {
   );
 }
 
-export function ForgotPasswordForm() {
-  const [email, setEmail] = useState("");
+export function ForgotPasswordForm({ defaultEmail = "" }) {
+  const [email, setEmail] = useState(defaultEmail);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [globalMessage, setGlobalMessage] = useState("");

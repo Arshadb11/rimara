@@ -12,6 +12,20 @@ const API_URL = `${process.env.NEXT_PUBLIC_API_URL}api/storeOrder`;
 const ORDER_DETAILS_API =
   "https://phpstack-1664344-6634175.cloudwaysapps.com/public/api/orderDetails";
 
+// Pulls the order reference out of the storeOrder response, whatever key the backend uses.
+function extractOrderRef(data) {
+  const src = [data, data?.data, data?.order];
+  const keys = ["order_id", "order_number", "order_code", "code", "reference", "id"];
+  for (const obj of src) {
+    if (!obj || typeof obj !== "object") continue;
+    for (const k of keys) {
+      if (obj[k] !== undefined && obj[k] !== null && obj[k] !== "") return String(obj[k]);
+    }
+  }
+  if (typeof window !== "undefined") console.warn("storeOrder response had no order reference:", data);
+  return "";
+}
+
 // ── Validation rules ──────────────────────────────────────────────────────────
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -275,8 +289,8 @@ function OrderConfirmed({ snapshot }) {
           {orderRef
             ? "Your order reference is " +
               orderRef +
-              ". We’ll be in touch shortly with shipping details."
-            : "Your order has been placed. We’ll be in touch shortly with shipping details."}
+              ". We'll be in touch shortly with shipping details."
+            : "Your order has been placed. We'll be in touch shortly with shipping details."}
         </p>
       </header>
 
@@ -1531,10 +1545,7 @@ function CheckoutContent() {
         if (payMethod === "cod") {
           setOrderSnapshot({
             orderRef:
-              data?.order_id ||
-              data?.id ||
-              data?.reference ||
-              "",
+              extractOrderRef(data),
 
             address,
 
@@ -1569,10 +1580,7 @@ function CheckoutContent() {
           clearCart();
 
           setOrderRef(
-            data?.order_id ||
-              data?.id ||
-              data?.reference ||
-              ""
+            extractOrderRef(data)
           );
 
           setState("success");
@@ -1845,7 +1853,7 @@ function CheckoutContent() {
 
           <section>
             <h2>
-              Delivery address
+              Shipping address
             </h2>
 
             <div className="form-grid">

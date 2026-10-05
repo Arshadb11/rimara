@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -114,6 +114,19 @@ function slugify(name = "") {
   return name.toLowerCase().trim().replace(/\s+/g, "-");
 }
 
+function stripHtml(html = "") {
+  let text = String(html || "");
+  // decode common entities first so escaped tags (&lt;p&gt;) are also removed
+  for (let i = 0; i < 2; i++) {
+    text = text
+      .replace(/&lt;/gi, "<").replace(/&gt;/gi, ">")
+      .replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&")
+      .replace(/&quot;/gi, '"').replace(/&#0?39;/g, "'")
+      .replace(/<[^>]*>/g, " ");
+  }
+  return text.replace(/\s+/g, " ").trim();
+}
+
 function enrichProduct(product) {
   const slug = slugify(product.product_name);
   const settings = productSettings[slug] || {};
@@ -135,12 +148,10 @@ function DiagnosticModal({ product, onClose, onReset }) {
     ? `${process.env.NEXT_PUBLIC_API_URL}storage/${images[0]}`
     : null;
 
-  const description = (product.description || "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  const description = stripHtml(product.description);
+  const occasion = stripHtml(product.occasion);
 
-  const tags = (product.item_classification || "")
+  const tags = stripHtml(product.item_classification)
     .split(/[·,\/]/).map((t) => t.trim()).filter(Boolean);
 
   const price = product.price
@@ -204,8 +215,8 @@ function DiagnosticModal({ product, onClose, onReset }) {
         <div className="diagnostic-modal__body">
           <p className="diagnostic-modal__match-label">Your Fragrance Match</p>
           <h2 className="diagnostic-modal__name">{product.product_name}</h2>
-          {product.occasion && (
-            <p className="diagnostic-modal__occasion">{product.occasion}</p>
+          {occasion && (
+            <p className="diagnostic-modal__occasion">{occasion}</p>
           )}
           <div className="diagnostic-modal__divider" />
 

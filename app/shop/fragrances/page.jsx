@@ -46,7 +46,7 @@ export default async function FragrancesPage() {
       color: "#b3a469",
       ctx: "Explore Air That Stays",
     },
-    "discovery-pack": {
+    "discovery-set": {
       color: "#4a4a46",
       ctx: "Discover the set",
     },
