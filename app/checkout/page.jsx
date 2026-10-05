@@ -2007,6 +2007,7 @@ function CheckoutContent() {
               >
                 <option value="">Select Emirate…</option>
                 <option value="Abu Dhabi">Abu Dhabi</option>
+                <option value="Al Ain">Al Ain</option>
                 <option value="Dubai">Dubai</option>
                 <option value="Sharjah">Sharjah</option>
                 <option value="Ajman">Ajman</option>

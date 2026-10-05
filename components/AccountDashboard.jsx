@@ -20,7 +20,7 @@ const PAGE_SIZE = 5;
 
 // order codes from the API already contain a leading '#'
 const isActiveOrder = (o) => !["completed", "cancelled", "returned"].includes(String(o?.status?.value || o?.status || "").toLowerCase());
-const EMIRATES = ["Abu Dhabi", "Dubai", "Sharjah", "Ajman", "Umm Al Quwain", "Ras Al Khaimah", "Fujairah"];
+const EMIRATES = ["Abu Dhabi", "Al Ain", "Dubai", "Sharjah", "Ajman", "Umm Al Quwain", "Ras Al Khaimah", "Fujairah"];
 const orderCode = (code) => `#${String(code ?? "").replace(/^#+/, "")}`;
 
 const TABS = [
