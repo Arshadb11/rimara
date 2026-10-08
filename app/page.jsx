@@ -99,7 +99,7 @@ export default async function HomePage() {
           {/* <p className="eyebrow">Concept</p> */}
         <h2><LineReveal>A journey that stays with you.</LineReveal></h2></div>
         <Reveal className="story-copy"><p>Rimara takes its name from the idea of movement and transformation. Not simply travelling from one place to another, but becoming someone new along the way.</p><p>Like the desert itself, every fragrance evolves with time, revealing new layers, new memories and a deeper connection to the person who wears it.</p>
-        <Link className="text-link" href="/concept">The Concept of Rimara</Link></Reveal>
+        <Link className="text-link" href="/story">OUR STORY</Link></Reveal>
       </section>
     </main>
   );
