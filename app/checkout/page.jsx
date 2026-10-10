@@ -2407,7 +2407,7 @@ function CheckoutContent() {
           {codPrice > 0 && (
             <div>
               <span>
-                COD fee (Non-Refundable)
+                COD Fee
               </span>
 
               <strong>

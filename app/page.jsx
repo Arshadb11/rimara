@@ -90,7 +90,7 @@ export default async function HomePage() {
           <p className="eyebrow">The World of Rimara</p>
           <h2><LineReveal>Inspired by the desert.</LineReveal></h2>
           <p className="body-copy">In the desert, nothing stands still. The wind moves. The sand shifts. The horizon changes with every hour. Yet some things remain: presence, character and memory.</p>
-          <Link className="button-secondary" href="/story">Discover the story</Link>
+          {/* <Link className="button-secondary" href="/story">Discover the story</Link> */}
         </Reveal>
       </section>
 
@@ -99,7 +99,7 @@ export default async function HomePage() {
           {/* <p className="eyebrow">Concept</p> */}
         <h2><LineReveal>A journey that stays with you.</LineReveal></h2></div>
         <Reveal className="story-copy"><p>Rimara takes its name from the idea of movement and transformation. Not simply travelling from one place to another, but becoming someone new along the way.</p><p>Like the desert itself, every fragrance evolves with time, revealing new layers, new memories and a deeper connection to the person who wears it.</p>
-        <Link className="text-link" href="/story">OUR STORY</Link></Reveal>
+        <Link className="text-link" href="/story">DISCOVER THE STORY</Link></Reveal>
       </section>
     </main>
   );
